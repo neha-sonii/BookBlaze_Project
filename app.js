@@ -8,11 +8,15 @@ import nodemailer from 'nodemailer'; //to send mails to the user
 import pgSession from 'connect-pg-simple';
 import passport from "passport";  //passport for authentication
 import LocalStrategy from "passport-local"; //passport strategy for local authentication
+// secure password
+import bcrypt from 'bcrypt';
 // import env from "dotenv";
 import dotenv from 'dotenv';
 dotenv.config();
 
 const app = express();
+// Start server
+const PORT = process.env.PORT;
 
 // Database connection
 const db = new pg.Client({
@@ -39,44 +43,79 @@ app.use(session({
         pool: db, // Connection pool
         createTableIfMissing: true // Use another table-name than the default "session" one
     }),
-    secret: 'SESSION_SECRET',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: {
         maxAge: 3600000 * 24 * 7 //7 days
     }
 }));
+// Middleware to require login for all routes except login, register, and static assets
+function ensureAuthenticated(req, res, next) {
+    // Allow access to login, register, and static files
+    if (
+        req.isAuthenticated && req.isAuthenticated() ||
+        req.path === '/login' ||
+        req.path === '/logedin' ||
+        req.path === '/register' ||
+        req.path === '/logout' ||
+        req.path === '/reset-password' ||
+        req.path.startsWith('/public/') ||
+        req.path.startsWith('/css/') ||
+        req.path.startsWith('/js/') ||
+        req.path.startsWith('/assets/')
+    ) {
+        return next();
+    }
+    // If not logged in, redirect to login page
+    return res.redirect('/login');
+}
+// Apply the middleware globally (after session and passport middlewares)
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(ensureAuthenticated);
 
 
 // flash messages available in all views
 app.use((req, res, next) => {
-    res.locals.user = req.session.user; // Make user available in all views
-    res.locals.messages = req.flash(); // Make flash messages available in all views
+    // Use session user if available, else fallback to req.user (passport)
+    res.locals.user = req.session.user || req.user;
+    res.locals.messages = req.flash();
     next();
 });
 
 
-// Passport local strategy
-passport.use(new LocalStrategy(
-    function (username, password, done) {
-        // Replace this with your actual user lookup logic
-        User.findOne({ username: username }, function (err, user) {
-            if (err) return done(err);
-            if (!user || user.password !== password) return done(null, false);
-            return done(null, user);
-        });
+// Passport local strategy using PostgreSQL users table
+// Assumes users table has columns: id, email, password
+passport.use(new LocalStrategy({ usernameField: 'email' }, async (email, password, done) => {
+    try {
+        const result = await db.query('SELECT * FROM users WHERE email = $1', [email]);
+        if (result.rows.length === 0) {
+            // Auto-register: create user if not found
+            const hashedPassword = await bcrypt.hash(password, 10);
+            const insertResult = await db.query('INSERT INTO users (email, password) VALUES ($1, $2) RETURNING *', [email, hashedPassword]);
+            return done(null, insertResult.rows[0]);
+        }
+        const user = result.rows[0];
+        const match = await bcrypt.compare(password, user.password);
+        if (!match) return done(null, false, { Messages: 'Incorrect password.' });
+        return done(null, user);
+    } catch (err) {
+        return done(err);
     }
-));
+}));
 passport.serializeUser((user, done) => {
     done(null, user.id);
 });
-passport.deserializeUser((id, done) => {
-    User.findById(id, (err, user) => {
-        done(err, user);
-    });
+passport.deserializeUser(async (id, done) => {
+    try {
+        const result = await db.query('SELECT * FROM users WHERE id = $1', [id]);
+        if (result.rows.length === 0) return done(null, false);
+        done(null, result.rows[0]);
+    } catch (err) {
+        done(err);
+    }
 });
 
 
@@ -84,8 +123,8 @@ passport.deserializeUser((id, done) => {
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'nehasoni052005@gmail.com',
-        pass: "lqtfxvgjfceklgdz"
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
     }
 });
 
@@ -256,8 +295,18 @@ app.get("/notes/:id", async (req, res) => {
 
 // Route for login page
 app.get("/login", (req, res) => {
+    // If already logged in, redirect to home
+    if (req.isAuthenticated && req.isAuthenticated()) {
+        req.flash("info", "You are already logged in");
+        return res.redirect("/");
+    }
+    // Combine error and success messages for EJS
+    // const messages = {
+    //     error: req.flash('error'),
+    //     success: req.flash('success')
+    // };
     res.render("login");
-})
+});
 
 
 // add to cart route
@@ -330,30 +379,52 @@ app.post("/subscribe", (req, res) => {
 
 
 // Route for user login
-app.post("/logedin", async (req, res) => {
-    const { email, password } = req.body;
-    // Set user in session
-    req.flash("success", "Logged in successfully");
-    req.session.user = { email };
-    console.log(req.body);
-
-    // sent an email for logged in
-    const mailOptions = {
-        from: 'nehasoni052005@gmail.com',
-        to: email,
-        subject: 'New Login Notification',
-        text: `Hi ${email},\n\nYou have successfully logged in to your account.`
-    };
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.log("Error sending email:", error);
-            return res.status(500).send("Error sending email" + error.message);
-        } else {
-            console.log("Email sent:", info.response);
-            return res.redirect("/"); // redirect to home page after form submission
-        }
-    });
-});
+app.post("/logedin",
+    (req, res, next) => {
+        passport.authenticate('local', function (err, user, info) {
+            if (err) { return next(err); }
+            if (!user) {
+                req.flash('error', info && info.messages ? info.messages : 'Login failed.');
+                return res.redirect('/login');
+            }
+            req.logIn(user, function (err) {
+                if (err) { return next(err); }
+                req.flash("success", "Logged in successfully");
+                req.session.user = user;
+                // Send login notification email to user
+                const email = user.email;
+                const mailOptions = {
+                    from: 'nehasoni052005@gmail.com',
+                    to: email,
+                    subject: 'New Login Notification',
+                    text: `Hi ${email},\n\nYou have successfully logged in to your account.`
+                };
+                transporter.sendMail(mailOptions, (error, info) => {
+                    if (error) {
+                        console.log("Error sending email to user:", error);
+                    } else {
+                        console.log("Email sent to user:", info.response);
+                    }
+                });
+                // Send login notification email to admin
+                const adminMailOptions = {
+                    from: 'nehasoni052005@gmail.com',
+                    to: 'nehasoni052005@gmail.com',
+                    subject: 'User Logged In',
+                    text: `User ${email} logged in at ${new Date().toLocaleString()}`
+                };
+                transporter.sendMail(adminMailOptions, (error, info) => {
+                    if (error) {
+                        console.log("Error sending email to admin:", error);
+                    } else {
+                        console.log("Admin notified of login:", info.response);
+                    }
+                    return res.redirect("/");
+                });
+            });
+        })(req, res, next);
+    }
+);
 
 // Logout route
 app.post("/logout", (req, res) => {
@@ -363,9 +434,50 @@ app.post("/logout", (req, res) => {
     });
 });
 
+// Reset password routes
+app.get('/reset-password', (req, res) => {
+    res.render('reset-password');
+});
 
-// Start server
-const PORT = process.env.PORT;
+app.post('/reset-password', async (req, res) => {
+    const { email, password } = req.body;
+    if (!email || !password) {
+        req.flash('error', 'Email and new password are required.');
+        return res.redirect('/reset-password');
+    }
+    try {
+        const result = await db.query('SELECT * FROM users WHERE email = $1', [email]);
+        if (result.rows.length === 0) {
+            req.flash('error', 'No user found with that email.');
+            return res.redirect('/reset-password');
+        }
+        const hashedPassword = await bcrypt.hash(password, 10);
+        await db.query('UPDATE users SET password = $1 WHERE email = $2', [hashedPassword, email]);
+        req.flash('success', 'Password reset successful! You can now log in.');
+        // send an email
+        const mailOptions = {
+            from: 'nehasoni052005@gmail.com',
+            to: email,
+            subject: 'Password Reset Successful',
+            text: `Hi ${email},\n\nYour password has been successfully reset. You can now log in with your new password.`
+        };
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.log("Error sending email:", error);
+                // Don't block password reset on email failure
+            } else {
+                console.log("Email sent:", info.response);
+                res.redirect('/');
+            }
+        });
+    } catch (err) {
+        console.error('Password reset error:', err);
+        req.flash('error', 'Password reset failed.');
+        res.redirect('/reset-password');
+    }
+});
+
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
+
 });
