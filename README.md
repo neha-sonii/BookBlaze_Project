@@ -29,7 +29,7 @@ It includes features like authentication, book CRUD operations, and integration 
 
 Clone the repository:
 ```bash
-git clone https://github.com/your-username/bookblaze.git
+git clone https://github.com/neha-sonii/BookBlaze_Project.git
 cd bookblaze
 ```
 ## Inatall Dependencies
