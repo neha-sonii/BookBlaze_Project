@@ -1,0 +1,51 @@
+<div class="container" style="background-color: <%= bgColor %>; color: <%= textColor %> !important;">
+    <a class="logo" href="/" style="color: <%= textColor %> !important;">
+        BookBlaze
+    </a>
+    <nav>
+        <!-- hamburger menu button -->
+        <button class="toggleMenu" style="border: 2px solid <%= menuBorder %>; color: <%= textColor %> !important;"
+            onclick="toggleMenu()">&#9776;</button>
+        <ul id="navLinks">
+            <li class=""><a class="navtext" href="/" style="color: <%= textColor %> !important">Home</a></li>
+            <li class=""><a class="navtext" href="/about" style="color: <%= textColor %> !important">About</a></li>
+            <li class=""><a class="navtext" href="/bookstore" style="color: <%= textColor %> !important">BookStore</a>
+            </li>
+            <li class=""><a class="navtext" href="/contact" style="color: <%= textColor %> !important">Contact</a>
+            </li>
+            <% if (user) { %>
+                <!-- Profile dropdown on hover -->
+                <div class="profile-dropdown">
+                    <button class="user" id="profileBtn"><i class="fa-solid fa-user"
+                            style="font-size: 24px;"></i></button>
+                    <div class="profile-menu" id="profileMenu">
+                        <div class="profile-info">Profile</div>
+                        <div class="profile-email">
+                            <%= user.email %>
+                        </div>
+                        <form action="/logout" method="POST" style="margin:0;">
+                            <button type="submit" class="btn logout-btn">Logout</button>
+                        </form>
+                    </div>
+                </div>
+                <% } else { %>
+                    <button class="button"><a href="/login">Log in</a></button>
+                    <% } %>
+        </ul>
+    </nav>
+</div>
+
+<script>
+    let nav = document.getElementById("navLinks");
+    let display = 0;
+    function toggleMenu() {
+        if (display == 1) {
+            nav.style.display = 'flex';
+            display = 0;
+        } else {
+            nav.style.display = 'none';
+            display = 1;
+        }
+    }
+
+</script>

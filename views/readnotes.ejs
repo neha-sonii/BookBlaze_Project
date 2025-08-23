@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- stylesheet -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- font awesome cdn -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
+        integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <!-- favicon -->
+    <link rel="shortcut icon" href="/images/favicon.png" type="image/x-icon">
+    <title>Read Notes</title>
+</head>
+
+<body>
+    <!-- header section starts here -->
+
+    <%- include('partials/header', { bgColor: bgColor, textColor: textColor, menuBorder: menuBorder }) %>
+
+        <!-- header section ends here -->
+
+        <!-- notes section starts here -->
+
+        <div class="shop-img"></div>
+
+        <div class="explore notes-bg">
+            <div class="shop-title">
+                <%= title %>
+            </div>
+            <% book.forEach(book=> { %>
+                <div class="notes-card">
+                    <div class="book-notes">
+
+                        <div class="book-img">
+                            <img src="https://covers.openlibrary.org/b/isbn/<%= book.isbn %>-L.jpg" alt="Book Cover"
+                                style="height: 230px; width: 11rem;">
+                        </div>
+                        <div class="book-title">
+                            <div class="book-title1">
+                                <%= book.title %>
+                            </div>
+                            <div class="book-author">
+                                <div>
+                                    <%= book.author %>
+                                </div>
+                                <div>
+                                    <%= book.description %>
+                                </div>
+                                <div>
+                                    <%= book.genre %>
+                                </div>
+                                <div>$<%= book.price %>
+                                </div>
+                                <div>⭐ <span>
+                                        <%= book.rating %>/10
+                                    </span></div>
+                            </div>
+                            <div class="shop-buttons">
+                                <button class="button"> <a href="/cart/<%= book.id %>">Add to Cart</a></button>
+                            </div>
+                        </div>
+                    </div>
+                    <h3>Notes: <%= book.title %>
+                    </h3>
+                    <br>
+                    <ul>
+                        <!-- if notes exist -->
+                        <% if (book.notes && book.notes.length) { %>
+                            <% book.notes.forEach(note=> { %>
+                                <li class="note-item">
+                                    <%= note %>
+                                </li>
+                                <% }) %>
+                                    <% } else { %>
+                                        <li>You are Offline.</li>
+                                        <% } %>
+                    </ul>
+                </div>
+                <% }) %>
+        </div>
+
+        <!-- notes section ends here -->
+
+        <script src="/js/index.js"></script>
+
+</body>
+
+</html>

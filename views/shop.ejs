@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- stylesheet -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- font awesome cdn -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
+        integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- favicon -->
+    <link rel="shortcut icon" href="/images/favicon.png" type="image/x-icon">
+    <title>BookStore</title>
+</head>
+
+<body>
+
+    <div class="book-container">
+        <!-- header section starts here -->
+
+        <% if (messages.success && messages.success.length> 0) { %>
+            <div class="alert alert-success">
+                <%= messages.success[0] %>
+            </div>
+            <% } %>
+
+                <% if (messages.error && messages.error.length> 0) { %>
+                    <div class="alert alert-danger">
+                        <%= messages.error[0] %>
+                    </div>
+                    <% } %>
+                        <!-- Popup section starts here -->
+                        <div id="addBookModal" class="modal">
+                            <div class="modal-content">
+                                <span class="close" id="closeModalBtn">&times;</span>
+                                <h2 id="modalTitle">Add a New Book</h2>
+                                <form id="bookForm" action="/add-book" method="POST">
+                                    <input type="hidden" name="id" id="bookId">
+                                    <input class="form-input" type="text" name="title" id="titleInput"
+                                        placeholder="Book Title" required autofocus>
+                                    <input class="form-input" type="text" name="author" id="authorInput"
+                                        placeholder="Author" required autofocus>
+                                    <input class="form-input" type="text" name="genre" id="genreInput"
+                                        placeholder="Genre" required autofocus>
+                                    <input class="form-input" type="number" name="price" id="priceInput"
+                                        placeholder="Price" required autofocus>
+                                    <input class="form-input" type="text" name="isbn" id="isbnInput" placeholder="ISBN"
+                                        required autofocus>
+                                    <input class="form-input" type="number" name="rating" id="ratingInput"
+                                        placeholder="Rating (1-10)" required autofocus>
+                                    <textarea class="form-input" name="description" id="descriptionInput"
+                                        placeholder="Description" required autofocus></textarea>
+                                    <button type="submit" class="button" id="submitBtn">Submit</button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- popup section ends here -->
+
+
+
+                        <%- include('partials/header', { bgColor: bgColor, textColor: textColor, menuBorder: menuBorder
+                            }) %>
+
+                            <!-- header section ends here -->
+
+                            <!-- bookstore content starts here -->
+
+                            <div class="shop-img">
+                                <input type="search" name="search" id="searchInput" placeholder="Search books...">
+                            </div>
+                            <div class="explore">
+                                <div class="shop-info">
+                                    <div class="shop-title">
+                                        <%= title %>
+                                    </div>
+                                    <% if(user && user.email==="nehasoni052005@gmail.com" ) { %>
+                                        <button class="button" id="openModalBtn">Add Book</button>
+                                        <% } %>
+                                </div>
+
+                                <div class="shop-content">
+                                    <div class="categories">
+                                        <div class="previous category-arrow">&#10094;</div>
+                                        <div class="category-title">All Categories : </div>
+                                        <div class="category1">
+                                            <input type="checkbox" name="Action and Adventure" id="category">
+                                            <div class="category-name">Action and Adventure</div>
+                                        </div>
+                                        <div class="category1">
+                                            <input type="checkbox" name="Historical romance" id="category">
+                                            <div class="category-name">Historical romance</div>
+                                        </div>
+                                        <div class="category1">
+                                            <input type="checkbox" name="Biographical" id="category">
+                                            <div class="category-name">Biographical</div>
+                                        </div>
+                                        <div class="category1">
+                                            <input type="checkbox" name="Buisness" id="category">
+                                            <div class="category-name">Buisness</div>
+                                        </div>
+                                        <div class="category1">
+                                            <input type="checkbox" name="Children" id="category">
+                                            <div class="category-name">Children</div>
+                                        </div>
+                                        <div class="category1">
+                                            <input type="checkbox" name="Christian Fiction" id="category">
+                                            <div class="category-name">Fiction</div>
+                                        </div>
+                                        <div class="category1">
+                                            <input type="checkbox" name="Historical" id="category">
+                                            <div class="category-name">Historical</div>
+                                        </div>
+                                        <div class="category1">
+                                            <input type="checkbox" name="Classical" id="category">
+                                            <div class="category-name">Classical</div>
+                                        </div>
+                                        <div class="category1">
+                                            <input type="checkbox" name="Cooking" id="category">
+                                            <div class="category-name">Cooking</div>
+                                        </div>
+                                        <div class="category1">
+                                            <input type="checkbox" name="Cozy Mysterious" id="category">
+                                            <div class="category-name">Cozy Mysterious</div>
+                                        </div>
+                                        <div class="category1">
+                                            <input type="checkbox" name="Dark Romance" id="category">
+                                            <div class="category-name">Dark Romance</div>
+                                        </div>
+                                        <div class="category1">
+                                            <input type="checkbox" name="Thriller" id="category">
+                                            <div class="category-name">Thriller</div>
+                                        </div>
+                                        <div class="category1">
+                                            <input type="checkbox" name="Science" id="category">
+                                            <div class="category-name">Science</div>
+                                        </div>
+                                        <div class="category1">
+                                            <input type="checkbox" name="Science Fiction" id="category">
+                                            <div class="category-name">Personal Development</div>
+                                        </div>
+                                        <div class="category1">
+                                            <input type="checkbox" name="Philosophical" id="category">
+                                            <div class="category-name">Philosphical</div>
+                                        </div>
+                                        <div class="category1">
+                                            <input type="checkbox" name="Parenting" id="category">
+                                            <div class="category-name">Parenting</div>
+                                        </div>
+                                        <div class="category1">
+                                            <input type="checkbox" name="Humor" id="category">
+                                            <div class="category-name">Humor</div>
+                                        </div>
+                                        <div class="next category-arrow">&#10095;</div>
+
+                                    </div>
+
+                                    <div class="shop-cards">
+                                        <div class="sort">
+                                            Sort by:
+                                            <select name="sort" id="sort">
+                                                <option value="relevance">All</option>
+                                                <option value="price_low_to_high">Price: Low to High</option>
+                                                <option value="price_high_to_low">Price: High to Low</option>
+                                            </select>
+                                        </div>
+                                        <% books.forEach(book=> { %>
+                                            <div class="book-card shop-card" data-price="<%= book.price %>"
+                                                data-genre="<%= book.genre ? book.genre.replace(/'/g, '').replace(/ /g, '_').toLowerCase() : '' %>">
+                                                <div class="book-img">
+                                                    <img class="bookimg"
+                                                        src="https://covers.openlibrary.org/b/isbn/<%= book.isbn %>-L.jpg"
+                                                        alt="Book Cover">
+                                                </div>
+                                                <div class="book-title">
+                                                    <div class="book-title1">
+                                                        <%= book.title %>
+                                                    </div>
+                                                    <div class="book-author">
+                                                        <div>
+                                                            <%= book.author %>
+                                                        </div>
+                                                        <div>
+                                                            <%= book.description %>
+                                                        </div>
+                                                        <div>
+                                                            <%= book.genre %>
+                                                        </div>
+                                                        <div>$<%= book.price %>
+                                                        </div>
+                                                        <div>⭐ <span>
+                                                                <%= book.rating %>/10
+                                                            </span></div>
+                                                    </div>
+                                                    <div class="shop-buttons">
+                                                        <button class="button"><a href="/cart/<%= book.id %>">Add to
+                                                                Cart</a></button>
+                                                        <button class="button"><a href="/notes/<%= book.id %>">Read
+                                                                Notes</a></button>
+
+                                                        <!-- if user is nehasoni@gmail.com can access the button -->
+                                                        <% if(user && user.email==="nehasoni052005@gmail.com" ) { %>
+                                                            <form action="/delete-book/<%= book.id %>"
+                                                                onclick="return confirm('Are you sure you want to delete this book?')"
+                                                                method="POST">
+                                                                <button class="delete" type="submit"><i
+                                                                        class="fa-solid fa-trash-can"></i></button>
+                                                            </form>
+                                                            <% } %>
+                                                                <!-- if user is nehasoni@gmail.com can access the button -->
+                                                                <% if(user && user.email==="nehasoni052005@gmail.com" )
+                                                                    { %>
+                                                                    <button class="delete edit" type="button"
+                                                                        data-id="<%= book.id %>"><i
+                                                                            class="fa-solid fa-pen-to-square"></i></button>
+                                                                    <% } %>
+
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <% }) %>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- footer section starts here -->
+
+                            <%- include('partials/footer') %>
+
+                                <!-- footer section ends here -->
+
+                                <script>
+                                    // generate popup box
+
+
+                                    const modal = document.getElementById("addBookModal");
+                                    const openBtn = document.getElementById("openModalBtn");
+                                    const closeBtn = document.getElementById("closeModalBtn");
+                                    const bookForm = document.getElementById("bookForm");
+                                    const modalTitle = document.getElementById("modalTitle");
+                                    const submitBtn = document.getElementById("submitBtn");
+
+                                    // Open modal for adding
+                                    if (openBtn) {
+                                        openBtn.onclick = () => {
+                                            modalTitle.textContent = "Add a New Book";
+                                            bookForm.action = "/add-book";
+                                            bookForm.method = "POST";
+                                            submitBtn.textContent = "Submit";
+                                            // Clear all fields
+                                            bookForm.reset();
+                                            document.getElementById("bookId").value = "";
+                                            modal.style.display = "block";
+                                        };
+                                    }
+
+                                    // Open modal for editing
+                                    document.querySelectorAll(".edit").forEach(btn => {
+                                        btn.onclick = function () {
+                                            // Get the book ID from the button's data attribute
+                                            const bookId = this.getAttribute("data-id");
+                                            fetch(`/edit-book/${bookId}`)
+                                            // Fetch the book details
+                                                .then(res => res.json())
+                                                .then(book => {
+                                                    modalTitle.textContent = "Edit Book";
+                                                    bookForm.action = `/edit-book/${bookId}`;
+                                                    bookForm.method = "POST";
+                                                    submitBtn.textContent = "Update";
+                                                    document.getElementById("bookId").value = book.id;
+                                                    document.getElementById("titleInput").value = book.title;
+                                                    document.getElementById("authorInput").value = book.author;
+                                                    document.getElementById("genreInput").value = book.genre;
+                                                    document.getElementById("priceInput").value = book.price;
+                                                    document.getElementById("isbnInput").value = book.isbn;
+                                                    document.getElementById("ratingInput").value = book.rating;
+                                                    document.getElementById("descriptionInput").value = book.description;
+                                                    modal.style.display = "block";
+                                                });
+                                        };
+                                    });
+
+                                    closeBtn.onclick = () => modal.style.display = "none";
+
+                                    // to show flash messages and disappear after 3sec.
+                                    setTimeout(() => {
+                                        const alert = document.querySelector(".alert");
+                                        if (alert) {
+                                            alert.style.display = "none";
+                                        }
+
+                                    }, 3000);
+
+
+                                    // to sort according to the sort list
+                                    document.getElementById('sort').addEventListener('change', function () {
+                                        const sortValue = this.value;
+                                        const container = document.querySelector('.shop-cards');
+                                        const cards = Array.from(container.querySelectorAll('.book-card'));
+
+                                        let sortedCards;
+
+                                        if (sortValue === 'relevance') {
+                                            sortedCards = cards.sort((a, b) => {
+                                                const aTitle = a.querySelector('.book-title').textContent.toLowerCase();
+                                                const bTitle = b.querySelector('.book-title').textContent.toLowerCase();
+                                                return aTitle.localeCompare(bTitle);
+                                            });
+                                        } else if (sortValue === 'price_low_to_high') {
+                                            sortedCards = cards.sort((a, b) =>
+                                                parseFloat(a.dataset.price) - parseFloat(b.dataset.price)
+                                            );
+                                        } else if (sortValue === 'price_high_to_low') {
+                                            sortedCards = cards.sort((a, b) => parseFloat(b.dataset.price) - parseFloat(a.dataset.price));
+                                        } else {
+                                            // Default to original order
+                                            sortedCards = cards;
+                                        }
+                                        // Clear the container and append the sorted cards
+                                        cards.forEach(cards => container.removeChild(cards));
+                                        sortedCards.forEach(card => container.appendChild(card));
+                                    });
+
+
+
+                                    // Filter books by genre/category
+                                    const categoryCheckboxes = document.querySelectorAll('.categories input[type="checkbox"]');
+                                    categoryCheckboxes.forEach(checkbox => {
+                                        checkbox.addEventListener('change', function () {
+                                            const checked = Array.from(categoryCheckboxes).filter(cb => cb.checked);
+                                            const selectedGenres = checked.map(cb => cb.nextElementSibling.textContent.trim().replace(/'/g, '').replace(/ /g, '_').toLowerCase());
+                                            const cards = document.querySelectorAll('.book-card');
+                                            if (selectedGenres.length === 0) {
+                                                cards.forEach(card => card.style.display = '');
+                                            } else {
+                                                cards.forEach(card => {
+                                                    const genre = card.getAttribute('data-genre');
+                                                    if (selectedGenres.includes(genre)) {
+                                                        card.style.display = '';
+                                                    } else {
+                                                        card.style.display = 'none';
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    });
+                                    
+                                    // Horizontal scroll for categories on small screens
+                                    const categories = document.querySelector(".categories");
+                                    const prevBtn = document.querySelector(".previous.category-arrow");
+                                    const nextBtn = document.querySelector(".next.category-arrow");
+                                    function scrollCategories(amount) {
+                                        categories.scrollBy({ left: amount, behavior: 'smooth' });
+                                    }
+                                    if (window.innerWidth <= 750) {
+                                        if (prevBtn) prevBtn.onclick = () => scrollCategories(-200);
+                                        if (nextBtn) nextBtn.onclick = () => scrollCategories(200);
+                                    }
+
+
+                                    // search book by their title
+                                    document.getElementById("searchInput").addEventListener("input", function () {
+                                        const searchTerm = this.value.toLowerCase();
+                                        const cards = document.querySelectorAll(".book-card");
+                                        cards.forEach(card => {
+                                            const title = card.querySelector(".book-title1").textContent.toLowerCase();
+                                            if (title.includes(searchTerm)) {
+                                                card.style.display = "";
+                                            } else {
+                                                card.style.display = "none";
+                                            }
+                                        });
+                                    });
+
+
+                                </script>
+</body>
+
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookBlaze</title>
+    <!-- font awesome cdn -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
+        integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- favicon -->
+    <link rel="shortcut icon" href="/images/favicon.png" type="image/x-icon">
+    <!-- style.css -->
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <!-- header section starts here -->
+
+    <header class="cover-image">
+
+        <% if (messages.success && messages.success.length> 0) { %>
+            <div class="alert alert-success">
+                <%= messages.success[0] %>
+            </div>
+            <% } %>
+                <% if (messages.error && messages.error.length> 0) { %>
+                    <div class="alert alert-danger">
+                        <%= messages.error[0] %>
+                    </div>
+                    <% } %>
+                        <%- include('partials/header', { bgColor: bgColor, textColor: textColor, menuBorder: menuBorder
+                            }) %>
+
+                            <div class="hero-text">
+                                <div class="content">
+                                    <div class="bg-opacity">
+                                        <div class="title head">Ignite your Reading journey</div>
+                                        <div class="cover-head2">Dive into stories, explore authors and light up your
+                                            bookself.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+    </header>
+
+    <!-- header section end here -->
+
+
+    <!-- best book section starts here -->
+
+    <section class="best-book">
+        <div class="title switch-color">Best book of the month</div>
+        <div class="book-section">
+            <div class="angle previous">&#10094;</div>
+            <div class="book-cover" id="book-track">
+                <% books.forEach(book=>{ %>
+                    <div class="book-card1 resize">
+                        <a href="/notes/<%= book.id %>">
+                            <img src="https://covers.openlibrary.org/b/isbn/<%= book.isbn %>-L.jpg" alt="the Hobbit">
+                        </a>
+                        <div class="discription">
+                            <div>
+                                <%= book.title %>
+                            </div>
+                            <div>$<%= book.price %>
+                            </div>
+                            <button class="button cart-button"><a href="/cart/<%= book.id %>">Add to
+                                    Cart</a></button>
+                        </div>
+                    </div>
+                    <% }) %>
+            </div>
+            <div class="angle next">&#10095;</div>
+        </div>
+    </section>
+
+    <!-- best book section ends here -->
+
+
+    <!-- testimonial section starts here -->
+    <div class="testimonial-bg">
+        <h1 class="title">Testimonial</h1>
+        <div class="testimonial-carousel">
+            <div class="carousel-track">
+                <div class="carousel-item active">
+                    <p class="quote">&#10075;&#10075;I am testimonial. Click to edit me text that says
+                        something
+                        nice about you and your
+                        service.&#10076;&#10076;</p>
+                    <hr class="testimonial-hr">
+                    <h3 class="name">JOHN DOE</h3>
+                    <p class="location">New York</p>
+                </div>
+                <div class="carousel-item">
+                    <p class="quote">&#10075;&#10075;Another testimonial. Your service is
+                        amazing!&#10076;&#10076;</p>
+                    <hr class="testimonial-hr">
+                    <h3 class="name">JANE SMITH</h3>
+                    <p class="location">California</p>
+                </div>
+                <div class="carousel-item">
+                    <p class="quote">&#10075;&#10075;Yet another happy customer. Highly
+                        recommend!&#10076;&#10076;</p>
+                    <hr class="testimonial-hr">
+                    <h3 class="name">ALAN WALKER</h3>
+                    <p class="location">Texas</p>
+                </div>
+            </div>
+
+            <button class="carousel-btn prev">‹</button>
+            <button class="carousel-btn next">›</button>
+        </div>
+    </div>
+
+
+    <!-- testimonial section ends here -->
+
+
+
+    <!-- contact us section starts here -->
+
+    <%- include('partials/form', { border: border, contact_title: contact_title }) %>
+
+
+        <!-- contact us section ends here -->
+
+
+        <!-- footer section starts here -->
+
+        <%- include('partials/footer') %>
+
+            <!-- footer section ends here -->
+
+
+            <script src="/js/index.js"></script>
+</body>
+
+</html>

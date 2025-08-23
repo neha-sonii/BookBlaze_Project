@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- stylesheet -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- font awesome cdn -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
+        integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <!-- favicon -->
+    <link rel="shortcut icon" href="/images/favicon.png" type="image/x-icon">
+    <title>Add to Cart</title>
+</head>
+
+<body>
+    <!-- header section starts here -->
+
+    <%- include('partials/header', { bgColor: bgColor, textColor: textColor, menuBorder: menuBorder }) %>
+
+        <!-- header section ends here -->
+
+
+        <!-- Add to cart section starts here  -->
+        <div class="cart-container">
+
+            <% books.forEach(book=> { %>
+                <div class="book-card cart-card">
+                    <div class="cart-book">
+                        <div class="book-img cart-img">
+                            <img src="https://covers.openlibrary.org/b/isbn/<%= book.isbn %>-L.jpg" alt="Book Cover"
+                                style="height: 210px; width: 11rem;">
+                        </div>
+                    </div>
+                    <div class="book-title cart-title">
+                        <div class="book-title1">
+                            <%= book.title %>
+                        </div>
+                        <div class="book-author cart-author">
+                            <div>
+                                <%= book.author %>
+                            </div>
+                            <div>
+                                <%= book.description %>
+                            </div>
+                            <div>
+                                <%= book.genre %>
+                            </div>
+                            <div>$<%= book.price %>
+                            </div>
+                            <div class="quantity">
+                                <span class="qty sub">&#9866;</span>
+                                <input class="qtyInput" type="number" min="1" value="1" readonly>
+                                <span class="qty add">&#10010;</span>
+                            </div>
+                        </div>
+                        <div class="shop-buttons">
+                            <button class="button" id="adtocart">Buy Now</button>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="box" id="box">
+                    <h3>&#10075;&#10075;<%= book.title %>&#10076;&#10076; is not in stock</h3>
+                </div>
+                <% }) %>
+
+        </div>
+
+
+        <!-- add to cart section ends here  -->
+
+
+        <!-- footer section starts here -->
+
+        <%- include('partials/footer') %>
+
+            <!-- footer section ends here -->
+
+            <script>
+                // add Quantity
+
+                document.addEventListener('DOMContentLoaded', () => {
+
+                    const addValue = document.querySelectorAll(".add");
+                    const subValue = document.querySelectorAll(".sub");
+                    const quantityInput = document.querySelectorAll(".qtyInput");
+
+                    addValue.forEach((btn, index) => {
+
+                        btn.addEventListener('click', () => {
+                            // Increase quantity
+                            quantityInput[index].value = parseInt(quantityInput[index].value) + 1;
+                        })
+                    })
+
+                    subValue.forEach((btn, index) => {
+
+                        btn.addEventListener('click', () => {
+                            // Decrease quantity   
+                            if (parseInt(quantityInput[index].value) > 1) {
+                                quantityInput[index].value = parseInt(quantityInput[index].value) - 1;
+                            }
+                        })
+                    })
+                })
+
+
+
+
+                // a popup message when buy button is clicked
+                const buyBtn = document.getElementById("adtocart");
+                const box = document.getElementById("box");
+                buyBtn.addEventListener('click', () => {
+                    box.style.display = "block";
+                    // hide the box after 1 second
+                    setTimeout(() => {
+                        box.style.display = "none";
+                    }, 2000);
+                })
+
+
+            </script>
+</body>
+
+</html>

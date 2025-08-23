@@ -1,0 +1,32 @@
+<section class="c-section">
+    <div class="title">
+        <%= contact_title %>
+    </div>
+    <div class="contactus-page">
+        <div class="sideimg">
+            <img src="/images/contact us image.jpg" alt="">
+        </div>
+        <div class="contactus">
+            <form action="/submit" method="POST">
+                <label class="form-label" for="f-name">First Name :</label>
+                <br>
+                <input type="text" class="input" name="fname" id="fname" placeholder="Enter your first name here" style="border: <%= border %>"
+                    required autocomplete="true">
+                <label class="form-label" for="l-name">Last Name :</label>
+                <br>
+                <input type="text" class="input" name="lname" id="lname" placeholder="Enter your last name here" style="border: <%= border %>"
+                    required autocomplete="true">
+                <label class="form-label" for="email">Email :</label>
+                <br>
+                <input type="email" class="input" name="email" id="email" placeholder="Enter your email here" style="border: <%= border %>"
+                    required>
+                <br>
+                <label class="form-label" for="msg">Message :</label>
+                <textarea class="input" name="message" id="message" rows="6" placeholder="Write your text here"
+                    style="border: <%= border %> !important" required></textarea>
+                <!-- <input class="button submit" type="submit" value="Submit"> -->
+                 <button class="button submit" type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+</section>

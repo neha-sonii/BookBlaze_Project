@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- stylesheet -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- font awesome cdn -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
+        integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <!-- favicon -->
+    <link rel="shortcut icon" href="/images/favicon.png" type="image/x-icon">
+    <title>Login</title>
+
+</head>
+
+<body class="login-container">
+    <!-- Login section starts here -->
+    <div class="login-box">
+        <h1 class="headText">Login</h1>
+        <form class="submit-page" action="/logedin" method="POST">
+
+            <div class="input-box">
+                <input class="login-input" type="email" name="email" placeholder="Enter Your Email" required> <br>
+                <input class="login-input" type="password" name="password" placeholder="Enter your password" required>
+            </div>
+            <div class="rembr-checkbox">
+                <div>
+                    <input type="checkbox">
+                    <label for="rememeber">Remember me</label>
+                </div>
+            </div>
+            <button type="submit" class="button login-btn">Login</button>
+        </form>
+        <div class="login-with">or Login with</div>
+        <button class="google-login"><img src="/images/google-icon.png" width="24px" height="24px" alt="">Continue With
+            Google</button>
+        <button class="google-login"><img src="/images/facebook-icon.png" width="24px" height="24px" alt="">Continue
+            With Facebook</button>
+        <div class="create-account">Don't have an account ? <span><a class="forget-pwd" href="">Create an
+                    account</a></span></div>
+    </div>
+
+    <!-- login section ends here  -->
+</body>
+
+</html>
