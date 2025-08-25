@@ -20,10 +20,10 @@ const PORT = process.env.PORT;
 
 // Database connection
 const db = new pg.Client({
-     connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false, // Render requires SSL
-  },
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false, // Render requires SSL
+    },
 });
 
 db.connect();
@@ -172,9 +172,9 @@ app.get("/contact", (req, res) => {
 // bookstore page
 app.get("/bookstore", async (req, res) => {
     try {
-        const result = await db.query("SELECT * FROM books ORDER BY id ASC");
+        // Order by id DESC so newest books are first
+        const result = await db.query("SELECT * FROM books ORDER BY id DESC");
         const BookFromDB = result.rows;
-        // books = BookFromDB; // Update the books array with data from the database
         res.render("shop", {
             books: BookFromDB,
             bgColor: '#e1d3c9d7',
@@ -182,7 +182,6 @@ app.get("/bookstore", async (req, res) => {
             menuBorder: '#1b3c53ff',
             title: "Explore",
         });
-
     } catch (error) {
         console.error("Error fetching books:", error);
         res.status(500).send("Error fetching books");
