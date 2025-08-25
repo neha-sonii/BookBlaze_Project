@@ -191,8 +191,8 @@ app.get("/bookstore", async (req, res) => {
 
 // add-book route
 app.post("/add-book", async (req, res) => {
-    // check if user is logged in and is neha soni
-    if (!req.isAuthenticated() || req.user.email !== "nehasoni052005@gmail.com") {
+    // check if user is logged in and is bookblaze5432@gmail.com
+    if (!req.isAuthenticated() || req.user.email !== "bookblaze5432@gmail.com") {
         req.flash("success", "Book added successfully");
         res.redirect("/bookstore");
     }
@@ -333,7 +333,7 @@ app.post("/submit", (req, res) => {
     req.flash("success", "form submitted successfully");
 
     const mailOptions = {
-        from: 'nehasoni052005@gmail.com',
+        from: 'BookBlaze <bookblaze5432@gmail.com>',
         to: email,
         subject: 'New Contact Form Submission',
         text: `Hi ${fname} ${lname},\n\nWe have received a new message from your contact form.\n\nMessage:\n${message} \n\nYou can reply to this email`
@@ -344,7 +344,21 @@ app.post("/submit", (req, res) => {
             return res.status(500).send("Error sending email" + error.message);
         } else {
             console.log("Email sent:", info.response);
-            return res.redirect("/bookstore"); // redirect to home page after form submission
+            // Send admin notification
+            const adminMailOptions = {
+                from: 'BookBlaze <bookblaze5432@gmail.com>',
+                to: 'bookblaze5432@gmail.com',
+                subject: 'Contact Form Submitted',
+                text: `A user (${email}) submitted the contact form.\nName: ${fname} ${lname}\nMessage: ${message}`
+            };
+            transporter.sendMail(adminMailOptions, (adminErr, adminInfo) => {
+                if (adminErr) {
+                    console.log("Error sending admin notification:", adminErr);
+                } else {
+                    console.log("Admin notified:", adminInfo.response);
+                }
+                return res.redirect("/bookstore");
+            });
         }
     });
 
@@ -358,7 +372,7 @@ app.post("/subscribe", (req, res) => {
     req.flash("success", "Subscribed successfully");
 
     const mailOptions = {
-        from: 'nehasoni052005@gmail.com',
+        from: 'BookBlaze <bookblaze5432@gmail.com>',
         to: email,
         subject: 'New Subscription',
         text: `Hi ${email},\n\nYou have successfully subscribed to our newsletter.`
@@ -369,7 +383,21 @@ app.post("/subscribe", (req, res) => {
             return res.status(500).send("Error sending email " + error.message);
         } else {
             console.log("Email sent:", info.response);
-            return res.redirect("/"); // redirect to home page after form submission
+            // Send admin notification
+            const adminMailOptions = {
+                from: 'BookBlaze <bookblaze5432@gmail.com>',
+                to: 'bookblaze5432@gmail.com',
+                subject: 'New Newsletter Subscription',
+                text: `A user (${email}) subscribed to the newsletter.`
+            };
+            transporter.sendMail(adminMailOptions, (adminErr, adminInfo) => {
+                if (adminErr) {
+                    console.log("Error sending admin notification:", adminErr);
+                } else {
+                    console.log("Admin notified:", adminInfo.response);
+                }
+                return res.redirect("/");
+            });
         }
     });
 
@@ -392,10 +420,10 @@ app.post("/logedin",
                 // Send login notification email to user
                 const email = user.email;
                 const mailOptions = {
-                    from: 'nehasoni052005@gmail.com',
+                    from: 'BookBlaze <bookblaze5432@gmail.com>',
                     to: email,
                     subject: 'New Login Notification',
-                    text: `Hi ${email},\n\nYou have successfully logged in to your account.`
+                    text: `Hi,\n\nYou have successfully logged in to your BookBlaze account.\n\nIf this wasn't you, please contact support immediately.\n\nThank you,\nBookBlaze Team`
                 };
                 transporter.sendMail(mailOptions, (error, info) => {
                     if (error) {
@@ -406,10 +434,10 @@ app.post("/logedin",
                 });
                 // Send login notification email to admin
                 const adminMailOptions = {
-                    from: 'nehasoni052005@gmail.com',
-                    to: 'nehasoni052005@gmail.com',
+                    from: 'BookBlaze <bookblaze5432@gmail.com>',
+                    to: 'bookblaze5432@gmail.com',
                     subject: 'User Logged In',
-                    text: `User ${email} logged in at ${new Date().toLocaleString()}`
+                    text: `A user (${email}) logged in to BookBlaze at ${new Date().toLocaleString()}`
                 };
                 transporter.sendMail(adminMailOptions, (error, info) => {
                     if (error) {
@@ -426,9 +454,24 @@ app.post("/logedin",
 
 // Logout route
 app.post("/logout", (req, res) => {
+    const userEmail = req.session.user ? req.session.user.email : 'Unknown';
     req.flash("success", "Logged out successfully");
-    req.session.destroy(() => {
-        res.redirect("/");
+    // Send admin notification
+    const adminMailOptions = {
+        from: 'BookBlaze <bookblaze5432@gmail.com>',
+        to: 'bookblaze5432@gmail.com',
+        subject: 'User Logged Out',
+        text: `A user (${userEmail}) logged out of BookBlaze at ${new Date().toLocaleString()}`
+    };
+    transporter.sendMail(adminMailOptions, (adminErr, adminInfo) => {
+        if (adminErr) {
+            console.log("Error sending admin notification:", adminErr);
+        } else {
+            console.log("Admin notified of logout:", adminInfo.response);
+        }
+        req.session.destroy(() => {
+            res.redirect("/");
+        });
     });
 });
 
@@ -454,7 +497,7 @@ app.post('/reset-password', async (req, res) => {
         req.flash('success', 'Password reset successful! You can now log in.');
         // send an email
         const mailOptions = {
-            from: 'nehasoni052005@gmail.com',
+            from: 'BookBlaze <bookblaze5432@gmail.com>',
             to: email,
             subject: 'Password Reset Successful',
             text: `Hi ${email},\n\nYour password has been successfully reset. You can now log in with your new password.`
