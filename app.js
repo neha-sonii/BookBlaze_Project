@@ -153,7 +153,7 @@ app.get("/", async (req, res) => {
 
 // about page
 app.get("/about", (req, res) => {
-    res.render("about", { bgColor: '#e1d3c9d7', textColor: '#1b3c53ff', menuBorder: '#1b3c53ff' });
+    res.render("About", { bgColor: '#e1d3c9d7', textColor: '#1b3c53ff', menuBorder: '#1b3c53ff' });
 });
 
 // Contact page
