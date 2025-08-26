@@ -7,7 +7,6 @@ It includes features like authentication, book CRUD operations, and integration 
 
 ## 🚀 Features
 - User authentication (Login/Register)
-- Add, update, and delete books
 - View all books
 - Search books by title
 - PostgreSQL database integration
