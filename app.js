@@ -472,7 +472,7 @@ app.post("/logout", (req, res) => {
             console.log("Admin notified of logout:", adminInfo.response);
         }
         req.session.destroy(() => {
-            res.redirect("/");
+            res.redirect("/login");
         });
     });
 });
