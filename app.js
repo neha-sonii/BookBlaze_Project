@@ -59,6 +59,8 @@ function ensureAuthenticated(req, res, next) {
         req.path === '/register' ||
         req.path === '/logout' ||
         req.path === '/reset-password' ||
+        req.path === '/' ||
+        req.path === '/about' ||
         req.path.startsWith('/public/') ||
         req.path.startsWith('/css/') ||
         req.path.startsWith('/js/') ||
@@ -508,7 +510,7 @@ app.post('/reset-password', async (req, res) => {
                 // Don't block password reset on email failure
             } else {
                 console.log("Email sent:", info.response);
-                res.redirect('/');
+                res.redirect('/login');
             }
         });
     } catch (err) {
