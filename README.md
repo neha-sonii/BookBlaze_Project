@@ -44,12 +44,13 @@ node app.js
 # server
 PORT=YOUR_PORT_NUMBER
 
-# PostgreSQL Database
-PG_HOST=HOST_NAME
-PG_PORT=DATABASE_PORT
-PG_USER=your_username
-PG_PASSWORD=your_password
-PG_DATABASE=DATABASE_NAME
+## Database Setup
+This project uses **PostgreSQL** hosted on [Render](https://bookblaze-project.onrender.com/).  
+Make sure you have a valid database URL. In your `.env` file, add:
+
+```env
+DATABASE_URL=postgres://<username>:<password>@<host>:<port>/<database>
+
 
 # JWT Secret
 JWT_SECRET=your_jwt_secret
