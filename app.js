@@ -46,7 +46,7 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
     cookie: {
-        maxAge: 3600000 * 24 * 7 //7 days
+        maxAge: 1000 * 60 * 60 * 24 * 365 // 1 year
     }
 }));
 // Middleware to require login for all routes except login, register, and static assets
