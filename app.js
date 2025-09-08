@@ -59,8 +59,6 @@ function ensureAuthenticated(req, res, next) {
         req.path === '/register' ||
         req.path === '/logout' ||
         req.path === '/reset-password' ||
-        req.path === '/' ||
-        req.path === '/about' ||
         req.path.startsWith('/public/') ||
         req.path.startsWith('/css/') ||
         req.path.startsWith('/js/') ||
@@ -300,11 +298,6 @@ app.get("/login", (req, res) => {
         req.flash("info", "You are already logged in");
         return res.redirect("/");
     }
-    // Combine error and success messages for EJS
-    // const messages = {
-    //     error: req.flash('error'),
-    //     success: req.flash('success')
-    // };
     res.render("login");
 });
 
@@ -407,8 +400,7 @@ app.post("/subscribe", (req, res) => {
 
 
 // Route for user login
-app.post("/logedin",
-    (req, res, next) => {
+app.post("/logedin", (req, res, next) => {
         passport.authenticate('local', function (err, user, info) {
             if (err) { return next(err); }
             if (!user) {
