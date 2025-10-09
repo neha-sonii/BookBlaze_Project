@@ -292,6 +292,7 @@ app.get("/notes/:id", async (req, res) => {
         });
     } catch (error) {
         console.log(error);
+        res.status(500).send('Error loading page');
     }
 });
 
@@ -514,8 +515,10 @@ app.post('/reset-password', async (req, res) => {
         });
     } catch (err) {
         console.error('Password reset error:', err);
+        res.status(500).send('Error loading page');
         req.flash('error', 'Password reset failed.');
         res.redirect('/reset-password');
+
     }
 });
 
