@@ -19,20 +19,14 @@ const PORT = process.env.PORT;
 
 // Database connection
 const db = new pg.Client({
-    connectionString: process.env.DATABASE_URL,
-    host: 'db.cdkaxervifpptdsouxtg.supabase.co', // explicitly set host
-    port: 5432,
-    ssl: {
-        rejectUnauthorized: false
-    },
-    family: 4,// 👈 forces IPv4
-
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false },
+  family: 4
 });
 
 db.connect()
-    .then(() => console.log("Connected to DB"))
-    .catch(err => console.error("DB Connection Error:", err));
-
+  .then(() => console.log("Connected to DB"))
+  .catch(err => console.error("DB Connection Error:", err));
 
 console.log(process.env.DATABASE_URL);
 
