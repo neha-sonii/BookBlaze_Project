@@ -10,7 +10,6 @@ import passport from "passport";  //passport for authentication
 import LocalStrategy from "passport-local"; //passport strategy for local authentication
 // secure password
 import bcrypt from 'bcrypt';
-// import env from "dotenv";
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -21,13 +20,21 @@ const PORT = process.env.PORT;
 // Database connection
 const db = new pg.Client({
     connectionString: process.env.DATABASE_URL,
+    host: 'db.cdkaxervifpptdsouxtg.supabase.co', // explicitly set host
+    port: 5432,
     ssl: {
-        rejectUnauthorized: false, // Render requires SSL
+        rejectUnauthorized: false
     },
+    family: 4,// 👈 forces IPv4
+
 });
 
-db.connect();
+db.connect()
+    .then(() => console.log("Connected to DB"))
+    .catch(err => console.error("DB Connection Error:", err));
 
+
+console.log(process.env.DATABASE_URL);
 
 // Set EJS as view engine
 app.set("view engine", "ejs");
@@ -401,49 +408,49 @@ app.post("/subscribe", (req, res) => {
 
 // Route for user login
 app.post("/logedin", (req, res, next) => {
-        passport.authenticate('local', function (err, user, info) {
+    passport.authenticate('local', function (err, user, info) {
+        if (err) { return next(err); }
+        if (!user) {
+            req.flash('error', info && info.messages ? info.messages : 'Login failed.');
+            return res.redirect('/login');
+        }
+        req.logIn(user, function (err) {
             if (err) { return next(err); }
-            if (!user) {
-                req.flash('error', info && info.messages ? info.messages : 'Login failed.');
-                return res.redirect('/login');
-            }
-            req.logIn(user, function (err) {
-                if (err) { return next(err); }
-                req.flash("success", "Logged in successfully");
-                req.session.user = user;
-                // Send login notification email to user
-                const email = user.email;
-                const mailOptions = {
-                    from: 'BookBlaze <bookblaze5432@gmail.com>',
-                    to: email,
-                    subject: 'New Login Notification',
-                    text: `Hi,\n\nYou have successfully logged in to your BookBlaze account.\n\nIf this wasn't you, please contact support immediately.\n\nThank you,\nBookBlaze Team`
-                };
-                transporter.sendMail(mailOptions, (error, info) => {
-                    if (error) {
-                        console.log("Error sending email to user:", error);
-                    } else {
-                        console.log("Email sent to user:", info.response);
-                    }
-                });
-                // Send login notification email to admin
-                const adminMailOptions = {
-                    from: 'BookBlaze <bookblaze5432@gmail.com>',
-                    to: 'bookblaze5432@gmail.com',
-                    subject: 'User Logged In',
-                    text: `A user (${email}) logged in to BookBlaze at ${new Date().toLocaleString()}`
-                };
-                transporter.sendMail(adminMailOptions, (error, info) => {
-                    if (error) {
-                        console.log("Error sending email to admin:", error);
-                    } else {
-                        console.log("Admin notified of login:", info.response);
-                    }
-                    return res.redirect("/");
-                });
+            req.flash("success", "Logged in successfully");
+            req.session.user = user;
+            // Send login notification email to user
+            const email = user.email;
+            const mailOptions = {
+                from: 'BookBlaze <bookblaze5432@gmail.com>',
+                to: email,
+                subject: 'New Login Notification',
+                text: `Hi,\n\nYou have successfully logged in to your BookBlaze account.\n\nIf this wasn't you, please contact support immediately.\n\nThank you,\nBookBlaze Team`
+            };
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    console.log("Error sending email to user:", error);
+                } else {
+                    console.log("Email sent to user:", info.response);
+                }
             });
-        })(req, res, next);
-    }
+            // Send login notification email to admin
+            const adminMailOptions = {
+                from: 'BookBlaze <bookblaze5432@gmail.com>',
+                to: 'bookblaze5432@gmail.com',
+                subject: 'User Logged In',
+                text: `A user (${email}) logged in to BookBlaze at ${new Date().toLocaleString()}`
+            };
+            transporter.sendMail(adminMailOptions, (error, info) => {
+                if (error) {
+                    console.log("Error sending email to admin:", error);
+                } else {
+                    console.log("Admin notified of login:", info.response);
+                }
+                return res.redirect("/");
+            });
+        });
+    })(req, res, next);
+}
 );
 
 // Logout route
