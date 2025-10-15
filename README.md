@@ -45,7 +45,7 @@ node app.js
 PORT=YOUR_PORT_NUMBER
 
 ## Database Setup
-This project uses **PostgreSQL** hosted on [Render](https://bookblaze-project.onrender.com/).  
+This project uses **PostgreSQL** hosted on [Vercel](https://book-blaze-project.vercel.app/).  
 Make sure you have a valid database URL. In your `.env` file, add:
 
 ```env
