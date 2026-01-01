@@ -3,19 +3,20 @@
         <%= contact_title %>
     </div>
     <div class="contactus-page">
-        <div class="sideimg">
+        <div class="sideimg animation">
             <img src="/images/contact us image.jpg" alt="">
         </div>
         <div class="contactus">
             <form action="/submit" method="POST">
-                <label class="form-label" for="f-name">First Name :</label>
+                <label class="form-label" for="f-name">Your Name :</label>
                 <br>
                 <input type="text" class="input" name="fname" id="fname" placeholder="Enter your first name here" style="border: <%= border %>"
                     required autocomplete="true">
-                <label class="form-label" for="l-name">Last Name :</label>
+                <!-- <label class="form-label" for="l-name">Last Name :</label>
                 <br>
                 <input type="text" class="input" name="lname" id="lname" placeholder="Enter your last name here" style="border: <%= border %>"
-                    required autocomplete="true">
+                    required autocomplete="true"> -->
+                    <br>
                 <label class="form-label" for="email">Email :</label>
                 <br>
                 <input type="email" class="input" name="email" id="email" placeholder="Enter your email here" style="border: <%= border %>"

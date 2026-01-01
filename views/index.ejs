@@ -13,6 +13,7 @@
     <link rel="shortcut icon" href="/images/favicon2.ico" type="image/x-icon">
     <!-- style.css -->
     <link rel="stylesheet" href="/css/style.css">
+
 </head>
 
 <body>
@@ -36,8 +37,9 @@
                             <div class="hero-text">
                                 <div class="content">
                                     <div class="bg-opacity">
-                                        <div class="title head">Ignite your Reading journey</div>
-                                        <div class="cover-head2">Dive into stories, explore authors and light up your
+                                        <div class="title head AnimateHero">Ignite your Reading journey</div>
+                                        <div class="cover-head2 AnimateHero">Dive into stories, explore authors and
+                                            light up your
                                             bookself.
                                         </div>
                                     </div>
@@ -50,67 +52,76 @@
 
     <!-- best book section starts here -->
 
-    <section class="best-book">
-        <div class="title switch-color">Best book of the month</div>
-        <div class="book-section">
+    <section class="best-book professional-best-book">
+        <div class="best-book-header">
+            <div>
+                <div class=" switch-color best-book-title">Best Book of the Month</div>
+                <div class="best-book-subtitle">Handpicked by our editors for you. Discover the most impactful read this
+                    month!</div>
+            </div>
+            <a href="/bookstore" class="button best-book-seeall">See all books</a>
+        </div>
+        <div class="book-section best-book-section">
             <div class="angle previous">&#10094;</div>
-            <div class="book-cover" id="book-track">
-                <% books.forEach(book=>{ %>
-                    <div class="book-card1 resize">
-                        <a href="/notes/<%= book.id %>">
-                            <img src="https://covers.openlibrary.org/b/isbn/<%= book.isbn %>-L.jpg" alt="the Hobbit">
-                        </a>
-                        <div class="discription">
-                            <div>
-                                <%= book.title %>
-                            </div>
-                            <div>$<%= book.price %>
-                            </div>
-                            <button class="button cart-button"><a href="/cart/<%= book.id %>">Add to
-                                    Cart</a></button>
-                        </div>
+            <div class="book-cover animation" id="book-track">
+                <% books.forEach((book, idx)=>{ %>
+                    <div class="book-card1 resize best-book-card">
+                        <% if(idx===0) { %>
+                            <div class="best-book-featured">★ Featured</div>
+                            <% } %>
+                                <a href="/notes/<%= book.id %>" class="best-book-img-link">
+                                    <img src="https://covers.openlibrary.org/b/isbn/<%= book.isbn %>-L.jpg"
+                                        alt="<%= book.title %>" class="best-book-img">
+                                </a>
+                                <div class="discription best-book-discription">
+                                    <div class="best-book-title-text">
+                                        <%= book.title %>
+                                    </div>
+                                    <div class="best-book-price">$<%= book.price %>
+                                    </div>
+                                    <button class="button cart-button best-book-cart-btn">
+                                        <a href="/cart/<%= book.id %>">Add to Cart</a>
+                                    </button>
+                                </div>
                     </div>
                     <% }) %>
             </div>
             <div class="angle next">&#10095;</div>
         </div>
     </section>
-
     <!-- best book section ends here -->
 
 
     <!-- testimonial section starts here -->
     <div class="testimonial-bg">
         <h1 class="title">Testimonial</h1>
-        <div class="testimonial-carousel">
-            <div class="carousel-track">
-                <div class="carousel-item active">
-                    <p class="quote">&#10075;&#10075;I am testimonial. Click to edit me text that says
-                        something
-                        nice about you and your
-                        service.&#10076;&#10076;</p>
-                    <hr class="testimonial-hr">
-                    <h3 class="name">JOHN DOE</h3>
-                    <p class="location">New York</p>
+        <div class="testimonial-card-carousel">
+            <div class="carousel-cards">
+                <div class="testimonial-card" id="testimonial-left">
+                    <div class="testimonial-content">
+                        <p class="quote">This is a testimonial! Amazing work delivered by the team.</p>
+                        <hr class="testimonial-hr">
+                        <h3 class="name">John walker</h3>
+                        <p class="location">New York</p>
+                    </div>
                 </div>
-                <div class="carousel-item">
-                    <p class="quote">&#10075;&#10075;Another testimonial. Your service is
-                        amazing!&#10076;&#10076;</p>
-                    <hr class="testimonial-hr">
-                    <h3 class="name">JANE SMITH</h3>
-                    <p class="location">California</p>
+                <div class="testimonial-card" id="testimonial-center">
+                    <div class="testimonial-content">
+                        <p class="quote">Another Testimonial. Have best time worked with her.</p>
+                        <hr class="testimonial-hr">
+                        <h3 class="name">Jane Smith</h3>
+                        <p class="location">Los Angeles</p>
+                    </div>
                 </div>
-                <div class="carousel-item">
-                    <p class="quote">&#10075;&#10075;Yet another happy customer. Highly
-                        recommend!&#10076;&#10076;</p>
-                    <hr class="testimonial-hr">
-                    <h3 class="name">ALAN WALKER</h3>
-                    <p class="location">Texas</p>
+                <div class="testimonial-card" id="testimonial-right">
+                    <div class="testimonial-content">
+                        <p class="quote">Yet, Another testimonial</p>
+                        <hr class="testimonial-hr">
+                        <h3 class="name">Alice Johnson</h3>
+                        <p class="location">Chicago</p>
+                    </div>
                 </div>
             </div>
-
-            <button class="carousel-btn prev">‹</button>
-            <button class="carousel-btn next">›</button>
         </div>
     </div>
 
@@ -135,6 +146,7 @@
 
 
             <script src="/js/index.js"></script>
+
 </body>
 
 </html>

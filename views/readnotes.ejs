@@ -10,8 +10,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
         integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <!-- favicon -->
-     <link rel="shortcut icon" href="/images/favicon2.ico" type="image/x-icon">
+    <!-- favicon -->
+    <link rel="shortcut icon" href="/images/favicon2.ico" type="image/x-icon">
     <title>Read Notes</title>
 </head>
 
@@ -31,7 +31,7 @@
                 <%= title %>
             </div>
             <% book.forEach(book=> { %>
-                <div class="notes-card">
+                <div class="notes-card card-animate">
                     <div class="book-notes">
 
                         <div class="book-img">
@@ -44,15 +44,15 @@
                             </div>
                             <div class="book-author">
                                 <div>
-                                    <%= book.author %>
+                                   <b>Author</b> - <%= book.author %>
                                 </div>
                                 <div>
                                     <%= book.description %>
                                 </div>
                                 <div>
-                                    <%= book.genre %>
+                                   <b>Genre</b> - <%= book.genre %>
                                 </div>
-                                <div>$<%= book.price %>
+                                <div><b>$<%= book.price %></b>
                                 </div>
                                 <div>⭐ <span>
                                         <%= book.rating %>/10
@@ -75,7 +75,7 @@
                                 </li>
                                 <% }) %>
                                     <% } else { %>
-                                        <li>Generating notes failed.</li>
+                                        <li>Try to refresh the Page.</li>
                                         <% } %>
                     </ul>
                 </div>
@@ -85,7 +85,34 @@
         <!-- notes section ends here -->
 
         <script src="/js/index.js"></script>
-
-</body>
-
-</html>
+        <script>
+            // Animate notes-card on scroll using Intersection Observer
+            (function () {
+                const cards = document.querySelectorAll('.card-animate');
+                function showCard(entry, observer) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('in-view');
+                        observer.unobserve(entry.target);
+                    }
+                }
+                if ('IntersectionObserver' in window) {
+                    const observer = new IntersectionObserver((entries, observer) => {
+                        entries.forEach(entry => {
+                            showCard(entry, observer);
+                        });
+                    }, { threshold: 0.15 });
+                    cards.forEach(card => {
+                        observer.observe(card);
+                    });
+                } else {
+                    // Fallback: show all cards if IntersectionObserver not supported
+                    cards.forEach(card => card.classList.add('in-view'));
+                }
+            })();
+            // Always show card if JS fails (noscript fallback)
+            document.querySelectorAll('.card-animate').forEach(card => {
+                if (!card.classList.contains('in-view')) {
+                    card.classList.add('in-view');
+                }
+            });
+        </script>

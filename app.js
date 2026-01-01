@@ -19,14 +19,14 @@ const PORT = process.env.PORT;
 
 // Database connection
 const db = new pg.Client({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false },
-  family: 4
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false },
+    family: 4
 });
 
 db.connect()
-  .then(() => console.log("Connected to DB"))
-  .catch(err => console.error("DB Connection Error:", err));
+    .then(() => console.log("Connected to DB"))
+    .catch(err => console.error("DB Connection Error:", err));
 
 console.log(process.env.DATABASE_URL);
 
@@ -55,6 +55,7 @@ function ensureAuthenticated(req, res, next) {
     // Allow access to login, register, and static files
     if (
         req.isAuthenticated && req.isAuthenticated() ||
+        req.path === '/' ||
         req.path === '/login' ||
         req.path === '/logedin' ||
         req.path === '/register' ||
@@ -140,7 +141,7 @@ app.get("/", async (req, res) => {
             books: BookFromDB,
             contact_title: 'Have a story to share ? We are listening',
             bgColor: 'none',
-            textColor: '#e1d3c9d7',
+            textColor: '#cab2a0d7',
             border: 'none',
             menuBorder: '#1b3c53ff'
         });
@@ -267,18 +268,36 @@ app.get("/notes/:id", async (req, res) => {
         if (!book) {
             return res.status(404).send("Book not found");
         }
+
+        // If notes are missing, try to generate, but do NOT block rendering
         if (!book.notes) {
-            //  generate notes only if not present
+            (async () => {
+                try {
+                    const generateNotes = (await import("./generateNotes.js")).default;
+                    const notes = await generateNotes(book.title, book.author);
+
+                    if (notes && notes.length > 0) {
+                        // Ensure the column 'notes' exists before running this!
+                        await db.query("UPDATE books SET notes = $1 WHERE id = $2", [JSON.stringify(notes), book.id]);
+                        console.log(`Notes generated and saved for book ID: ${book.id}`);
+                    }
+                } catch (error) {
+                    // This catch prevents the "Unhandled 'error' event" crash
+                    console.error("Async background generation failed:", error.message);
+                }
+            })();
+            book.notes = []; // Temporarily set to empty array for rendering
+        } else if (typeof book.notes === 'string') {
+            // Parse notes if stored as JSON string
             try {
-                const notes = await generateNotes(book.title, book.author);
-                book.notes = notes;
-                console.log("Generated notes:", notes);
-            } catch (error) {
-                return res.status(500).send("Error generating notes");
+                book.notes = JSON.parse(book.notes);
+            } catch (e) {
+                book.notes = [];
             }
         }
+
         res.render("readnotes", {
-            book: [book], // not books: [book]
+            book: [book],
             title: "Read Notes",
             bgColor: '#e1d3c9d7',
             textColor: '#1b3c53ff',
@@ -289,6 +308,25 @@ app.get("/notes/:id", async (req, res) => {
         res.status(500).send('Error loading page');
     }
 });
+//                 const notes = await generateNotes(book.title, book.author);
+//                 book.notes = notes;
+//                 console.log("Generated notes:", notes);
+//             } catch (error) {
+//                 return res.status(500).send("Error generating notes");
+//             }
+//         }
+//         res.render("readnotes", {
+//             book: [book], // not books: [book]
+//             title: "Read Notes",
+//             bgColor: '#e1d3c9d7',
+//             textColor: '#1b3c53ff',
+//             menuBorder: '#1b3c53ff'
+//         });
+//     } catch (error) {
+//         console.log(error);
+//         res.status(500).send('Error loading page');
+//     }
+// });
 
 
 

@@ -10,8 +10,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
         integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <!-- favicon -->
-     <link rel="shortcut icon" href="/images/favicon2.ico" type="image/x-icon">
+    <!-- favicon -->
+    <link rel="shortcut icon" href="/images/favicon2.ico" type="image/x-icon">
     <title>Add to Cart</title>
 </head>
 
@@ -25,7 +25,6 @@
 
         <!-- Add to cart section starts here  -->
         <div class="cart-container">
-
             <% books.forEach(book=> { %>
                 <div class="book-card cart-card">
                     <div class="cart-book">
@@ -60,13 +59,11 @@
                             <button class="button" id="adtocart">Buy Now</button>
                         </div>
                     </div>
-
-                </div>
-                <div class="box" id="box">
-                    <h3>&#10075;&#10075;<%= book.title %>&#10076;&#10076; is not in stock</h3>
+                    <div class="box" id="box">
+                        <h3>&#10075;&#10075;<%= book.title %>&#10076;&#10076; is not in stock</h3>
+                    </div>
                 </div>
                 <% }) %>
-
         </div>
 
 
@@ -80,36 +77,43 @@
             <!-- footer section ends here -->
 
             <script>
-                // add Quantity
-
+                // Add Quantity
                 document.addEventListener('DOMContentLoaded', () => {
-
                     const addValue = document.querySelectorAll(".add");
                     const subValue = document.querySelectorAll(".sub");
                     const quantityInput = document.querySelectorAll(".qtyInput");
-
                     addValue.forEach((btn, index) => {
-
                         btn.addEventListener('click', () => {
-                            // Increase quantity
                             quantityInput[index].value = parseInt(quantityInput[index].value) + 1;
                         })
                     })
-
                     subValue.forEach((btn, index) => {
-
                         btn.addEventListener('click', () => {
-                            // Decrease quantity   
                             if (parseInt(quantityInput[index].value) > 1) {
                                 quantityInput[index].value = parseInt(quantityInput[index].value) - 1;
                             }
                         })
                     })
-                })
 
+                    // Animate cart cards on scroll (Intersection Observer)
+                    const cartCards = document.querySelectorAll('.cart-card');
+                    if ('IntersectionObserver' in window) {
+                        const observer = new IntersectionObserver((entries, obs) => {
+                            entries.forEach(entry => {
+                                if (entry.isIntersecting) {
+                                    entry.target.classList.add('in-view');
+                                    obs.unobserve(entry.target);
+                                }
+                            });
+                        }, { threshold: 0.2 });
+                        cartCards.forEach(card => observer.observe(card));
+                    } else {
+                        // Fallback: show all
+                        cartCards.forEach(card => card.classList.add('in-view'));
+                    }
+                });
 
-
-
+                // a popup message when buy button is clicked
                 // a popup message when buy button is clicked
                 const buyBtn = document.getElementById("adtocart");
                 const box = document.getElementById("box");
@@ -121,7 +125,19 @@
                     }, 2000);
                 })
 
-
+                // // (Handles multiple books/cards)
+                // document.addEventListener('DOMContentLoaded', () => {
+                //     const buyBtns = document.querySelectorAll('#adtocart');
+                //     const boxes = document.querySelectorAll('#box');
+                //     buyBtns.forEach((btn, idx) => {
+                //         btn.addEventListener('click', () => {
+                //             boxes[idx].style.display = "block";
+                //             setTimeout(() => {
+                //                 boxes[idx].style.display = "none";
+                //             }, 2000);
+                //         });
+                //     });
+                // });
             </script>
 </body>
 

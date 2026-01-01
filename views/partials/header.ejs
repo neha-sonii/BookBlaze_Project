@@ -1,18 +1,20 @@
 <div class="container" style="background-color: <%= bgColor %>; color: <%= textColor %> !important;">
-    <a class="logo" href="/" style="color: <%= textColor %> !important;">
+    <!-- <div class="AnimateHeader"> -->
+    <a class="logo AnimateHeader" href="/" style="color: <%= textColor %> !important;">
         BookBlaze
     </a>
+    <!-- </div> -->
+
     <nav>
         <!-- hamburger menu button -->
         <button class="toggleMenu" style="border: 2px solid <%= menuBorder %>; color: <%= textColor %> !important;"
             onclick="toggleMenu()">&#9776;</button>
-        <ul id="navLinks">
+        <ul id="navLinks" class="AnimateHeader">
             <li class=""><a class="navtext" href="/" style="color: <%= textColor %> !important">Home</a></li>
             <li class=""><a class="navtext" href="/about" style="color: <%= textColor %> !important">About</a></li>
             <li class=""><a class="navtext" href="/bookstore" style="color: <%= textColor %> !important">BookStore</a>
             </li>
-            <li class=""><a class="navtext" href="/contact" style="color: <%= textColor %> !important">Contact</a>
-            </li>
+            <li class=""><a class="navtext" href="/contact" style="color: <%= textColor %> !important">Contact</a></li>
             <% if (user) { %>
                 <!-- Profile dropdown on hover -->
                 <div class="profile-dropdown">
@@ -29,7 +31,7 @@
                     </div>
                 </div>
                 <% } else { %>
-                    <button class="button"><a href="/login">Log in</a></button>
+                    <button class="button"><a href="/login">Sign in</a></button>
                     <% } %>
         </ul>
     </nav>
@@ -49,4 +51,21 @@
         }
     }
 
+    // Add underline to nav link when clicked
+    document.addEventListener('DOMContentLoaded', function () {
+        const navLinks = document.querySelectorAll('#navLinks .navtext');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function () {
+                navLinks.forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Optionally, set active based on current URL
+        navLinks.forEach(link => {
+            if (link.href === window.location.href) {
+                link.classList.add('active');
+            }
+        });
+    });
 </script>

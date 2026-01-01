@@ -11,13 +11,13 @@
         integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- favicon -->
-     <link rel="shortcut icon" href="/images/favicon2.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/favicon2.ico" type="image/x-icon">
     <title>BookStore</title>
 </head>
 
 <body>
 
-    <div class="book-container">
+    <div class="book-container shop-fade-in">
         <!-- header section starts here -->
 
         <% if (messages.success && messages.success.length> 0) { %>
@@ -167,7 +167,7 @@
                                             </select>
                                         </div>
                                         <% books.forEach(book=> { %>
-                                            <div class="book-card shop-card" data-price="<%= book.price %>"
+                                            <div class="book-card shop-card card-animate" data-price="<%= book.price %>"
                                                 data-genre="<%= book.genre ? book.genre.replace(/'/g, '').replace(/ /g, '_').toLowerCase() : '' %>">
                                                 <div class="book-img">
                                                     <img class="bookimg"
@@ -180,15 +180,15 @@
                                                     </div>
                                                     <div class="book-author">
                                                         <div>
-                                                            <%= book.author %>
+                                                           <b>Author</b> - <%= book.author %>
                                                         </div>
                                                         <div>
                                                             <%= book.description %>
                                                         </div>
                                                         <div>
-                                                            <%= book.genre %>
+                                                           <b>Genre</b> - <%= book.genre %>
                                                         </div>
-                                                        <div>$<%= book.price %>
+                                                        <div><b>$<%= book.price %></b>
                                                         </div>
                                                         <div>⭐ <span>
                                                                 <%= book.rating %>/10
@@ -210,8 +210,8 @@
                                                             </form>
                                                             <% } %>
                                                                 <!-- if user is bookblaze5432@gmail.com can access the button -->
-                                                                <% if(user && user.email==="bookblaze5432@gmail.com" )
-                                                                    { %>
+                                                                <% if(user && user.email==="bookblaze5432@gmail.com" ) {
+                                                                    %>
                                                                     <button class="delete edit" type="button"
                                                                         data-id="<%= book.id %>"><i
                                                                             class="fa-solid fa-pen-to-square"></i></button>
@@ -263,7 +263,7 @@
                                             // Get the book ID from the button's data attribute
                                             const bookId = this.getAttribute("data-id");
                                             fetch(`/edit-book/${bookId}`)
-                                            // Fetch the book details
+                                                // Fetch the book details
                                                 .then(res => res.json())
                                                 .then(book => {
                                                     modalTitle.textContent = "Edit Book";
@@ -347,7 +347,7 @@
                                             }
                                         });
                                     });
-                                    
+
                                     // Horizontal scroll for categories on small screens
                                     const categories = document.querySelector(".categories");
                                     const prevBtn = document.querySelector(".previous.category-arrow");
@@ -376,6 +376,30 @@
                                     });
 
 
+                                    // Animate book cards on scroll using Intersection Observer
+                                    (function () {
+                                        const cards = document.querySelectorAll('.card-animate');
+                                        function showCard(entry, observer) {
+                                            if (entry.isIntersecting) {
+                                                entry.target.classList.add('in-view');
+                                                observer.unobserve(entry.target);
+                                            }
+                                        }
+                                        if ('IntersectionObserver' in window) {
+                                            const observer = new IntersectionObserver((entries, observer) => {
+                                                entries.forEach(entry => {
+                                                    showCard(entry, observer);
+                                                });
+                                            }, { threshold: 0.15 });
+                                            cards.forEach(card => {
+                                                card.classList.remove('in-view'); // Ensure hidden initially
+                                                observer.observe(card);
+                                            });
+                                        } else {
+                                            // Fallback: show all cards if IntersectionObserver not supported
+                                            cards.forEach(card => card.classList.add('in-view'));
+                                        }
+                                    })();
                                 </script>
 </body>
 
