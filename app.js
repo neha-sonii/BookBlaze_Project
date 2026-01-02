@@ -56,6 +56,11 @@ function ensureAuthenticated(req, res, next) {
     if (
         req.isAuthenticated && req.isAuthenticated() ||
         req.path === '/' ||
+        req.path === '/about' ||
+        req.path === '/contact' ||
+        req.path === '/bookstore' ||
+        req.path.startsWith('/notes/') ||
+        req.path.startsWith('/cart/') ||
         req.path === '/login' ||
         req.path === '/logedin' ||
         req.path === '/register' ||
