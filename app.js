@@ -60,7 +60,6 @@ function ensureAuthenticated(req, res, next) {
         req.path === '/contact' ||
         req.path === '/bookstore' ||
         req.path.startsWith('/notes/') ||
-        req.path.startsWith('/cart/') ||
         req.path === '/login' ||
         req.path === '/logedin' ||
         req.path === '/register' ||
@@ -345,26 +344,6 @@ app.get("/login", (req, res) => {
     }
     res.render("login");
 });
-
-
-// add to cart route
-app.get("/cart/:id", async (req, res) => {
-    try {
-        const result = await db.query("SELECT * FROM books WHERE id = $1", [req.params.id]);
-        const bookfromDB = result.rows[0];
-        res.render("AddToCart", {
-            books: [bookfromDB],
-            bgColor: '#e1d3c9d7',
-            textColor: '#1b3c53ff',
-            menuBorder: '#1b3c53ff'
-        })
-    } catch (error) {
-        console.log("error fetching book", error);
-        res.status(500).send("error fetching books");
-
-    }
-
-})
 
 // route to submit the contact form
 app.post("/submit", (req, res) => {
