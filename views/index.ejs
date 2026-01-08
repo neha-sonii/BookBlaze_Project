@@ -13,141 +13,185 @@
     <link rel="shortcut icon" href="/images/favicon2.ico" type="image/x-icon">
     <!-- style.css -->
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
 
 </head>
 
 <body>
     <!-- header section starts here -->
 
-    <header class="cover-image">
+    <%- include('partials/header') %>
 
-        <% if (messages.success && messages.success.length> 0) { %>
-            <div class="alert alert-success">
-                <%= messages.success[0] %>
-            </div>
-            <% } %>
-                <% if (messages.error && messages.error.length> 0) { %>
-                    <div class="alert alert-danger">
-                        <%= messages.error[0] %>
-                    </div>
-                    <% } %>
-                        <%- include('partials/header', { bgColor: bgColor, textColor: textColor, menuBorder: menuBorder
-                            }) %>
+        <header class="cover-image">
+            <div class="hero-overlay"></div>
 
-                            <div class="hero-text">
-                                <div class="content">
-                                    <div class="bg-opacity">
-                                        <div class="title head AnimateHero">Ignite your Reading journey</div>
-                                        <div class="cover-head2 AnimateHero">Dive into stories, explore authors and
-                                            light up your
-                                            bookself.
+            <% if (messages.success && messages.success.length> 0) { %>
+                <div class="alert alert-success">
+                    <%= messages.success[0] %>
+                </div>
+                <% } %>
+                    <% if (messages.error && messages.error.length> 0) { %>
+                        <div class="alert alert-danger">
+                            <%= messages.error[0] %>
+                        </div>
+                        <% } %>
+
+                            <div class="hero-container">
+                                <div class="hero-text-center">
+
+                                    <div class="featured-card-wrapper AnimateHero">
+                                        <div class="featured-card">
+                                            <span class="card-tag">Featured Summary</span>
+                                            <img src="/images/midnight library.jpg" width="130px" height="150px"
+                                                alt="Book Cover">
+                                            <!-- <h3>The Midnight Library</h3> -->
+                                            <div class="stars">★★★★★</div>
+                                            <a href="/bookstore" class="card-btn">Read Summary</a>
+                                        </div>
+                                    </div>
+
+                                    <div class="hero-text">
+                                        <div class="head AnimateHero"><span class="highlight">Ignite</span> your Reading
+                                            journey</div>
+                                        <div class="cover-head2 AnimateHero">
+                                            Stop guessing. Get precise summaries and insights to find your next great
+                                            read
+                                            before you buy.
+                                        </div>
+                                        <button class="explore-btn AnimateHero">
+                                            <a href="/bookstore">Explore Now</a>
+                                        </button>
+
+                                        <div class="social-proof AnimateHero">
+                                            Join <span class="star-contrast">5,000+</span> readers discovering <span
+                                                class="star-contrast">★★★★★</span> books
+                                        </div>
+                                        <div class="benefits-bar AnimateHero">
+                                            <div class="benefit-item"><i class="fa-solid fa-book-open"></i> Precise
+                                                Summaries</div>
+                                            <div class="benefit-item"><i class="fa-solid fa-clock-rotate-left"></i> Save
+                                                Time</div>
+                                            <div class="benefit-item"><i class="fa-solid fa-cart-shopping"></i> Informed
+                                                Purchases</div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-    </header>
-
-    <!-- header section end here -->
-
-
-    <!-- best book section starts here -->
-
-    <section class="best-book professional-best-book">
-        <div class="best-book-header">
-            <div>
-                <div class=" switch-color best-book-title">Best Book of the Month</div>
-                <div class="best-book-subtitle">Handpicked by our editors for you. Discover the most impactful read this
-                    month!</div>
-            </div>
-            <a href="/bookstore" class="button best-book-seeall">See all books</a>
-        </div>
-        <div class="book-section best-book-section">
-            <div class="angle previous">&#10094;</div>
-            <div class="book-cover animation" id="book-track">
-                <% books.forEach((book, idx)=>{ %>
-                    <div class="book-card1 resize best-book-card">
-                        <% if(idx===0) { %>
-                            <div class="best-book-featured">★ Featured</div>
-                            <% } %>
-                                <a href="/notes/<%= book.id %>" class="best-book-img-link">
-                                    <img src="https://covers.openlibrary.org/b/isbn/<%= book.isbn %>-L.jpg"
-                                        alt="<%= book.title %>" class="best-book-img">
-                                </a>
-                                <div class="discription best-book-discription">
-                                    <div class="best-book-title-text">
-                                        <%= book.title %>
+                                    <div class="preview-books">
+                                        <img class="preview-book-size"
+                                            src="https://covers.openlibrary.org/b/isbn/0446693219-L.jpg" alt="">
+                                        <img class="preview-book-size"
+                                            src="https://covers.openlibrary.org/b/isbn/9780060784119-L.jpg" alt="">
+                                        <img class="preview-book-size"
+                                            src="https://covers.openlibrary.org/b/isbn/9780194229548-L.jpg" alt="">
+                                        <img class="preview-book-size"
+                                            src="https://covers.openlibrary.org/b/isbn/9781407103891-L.jpg" alt="">
+                                        <img class="preview-book-size"
+                                            src="https://covers.openlibrary.org/b/isbn/9782352941101-L.jpg" alt="">
+                                        <img class="preview-book-size"
+                                            src="https://covers.openlibrary.org/b/isbn/9781537678085-L.jpg" alt="">
+                                        <img class="preview-book-size"
+                                            src="https://covers.openlibrary.org/b/isbn/9781406365931-L.jpg" alt="">
+                                        <img class="preview-book-size"
+                                            src="https://covers.openlibrary.org/b/isbn/9780763629304-L.jpg" alt="">
+                                        <img class="preview-book-size"
+                                            src="https://covers.openlibrary.org/b/isbn/9780545790352-L.jpg" alt="">
+                                        <img class="preview-book-size"
+                                            src="https://covers.openlibrary.org/b/isbn/9782070584628-L.jpg" alt="">
+                                        <img class="preview-book-size"
+                                            src="https://covers.openlibrary.org/b/isbn/9780395520215-L.jpg" alt="">
+                                        <img class="preview-book-size"
+                                            src="https://covers.openlibrary.org/b/isbn/9780740751097-L.jpg" alt="">
+                                        <img class="preview-book-size"
+                                            src="https://covers.openlibrary.org/b/isbn/1559725214-L.jpg" alt="">
+                                        <img class="preview-book-size"
+                                            src="https://covers.openlibrary.org/b/isbn/0380977567-L.jpg" alt="">
+                                        <img class="preview-book-size"
+                                            src="https://covers.openlibrary.org/b/isbn/0395572266-L.jpg" alt="">
+                                        <img class="preview-book-size"
+                                            src="https://covers.openlibrary.org/b/isbn/9780811853293-L.jpg" alt="">
+                                        <img class="preview-book-size"
+                                            src="https://covers.openlibrary.org/b/isbn/0671746936-L.jpg" alt="">
+                                        <img class="preview-book-size"
+                                            src="https://covers.openlibrary.org/b/isbn/0708819087-L.jpg" alt="">
+                                        <img class="preview-book-size"
+                                            src="https://covers.openlibrary.org/b/isbn/9781937832872-L.jpg" alt="">
+                                        <img class="preview-book-size"
+                                            src="https://covers.openlibrary.org/b/isbn/9798395421142-L.jpg" alt="">
+                                        <img class="preview-book-size"
+                                            src="https://covers.openlibrary.org/b/isbn/9780446509367-L.jpg" alt="">
                                     </div>
-                                    <!-- <div class="best-book-price">$<%= book.price %>
+                            </div>
+
+
+
+        </header>
+
+        <!-- header section end here -->
+
+        <!-- <div class="bottom-blur"></div> -->
+
+
+        <!-- best book section starts here -->
+
+        <section class="best-book professional-best-book">
+            <div class="best-book-header">
+                <div>
+                    <div class=" switch-color best-book-title">Best Book of the Month</div>
+                    <div class="best-book-subtitle">Handpicked by our editors for you. Discover the most impactful read
+                        this
+                        month!</div>
+                </div>
+                <a href="/bookstore" class="best-book-seeall">See all books</a>
+            </div>
+            <div class="book-section best-book-section">
+                <div class="angle previous">&#10094;</div>
+                <div class="book-cover animation" id="book-track">
+                    <% books.forEach((book, idx)=>{ %>
+                        <div class="book-card1 resize best-book-card">
+                            <% if(idx===0) { %>
+                                <div class="best-book-featured">★ Featured</div>
+                                <% } %>
+                                    <a href="/notes/<%= book.id %>" class="best-book-img-link">
+                                        <img src="https://covers.openlibrary.org/b/isbn/<%= book.isbn %>-L.jpg"
+                                            alt="<%= book.title %>" class="best-book-img">
+                                    </a>
+                                    <div class="discription best-book-discription">
+                                        <div class="best-book-title-text">
+                                            <%= book.title %>
+                                        </div>
+                                        <!-- <div class="best-book-price">$<%= book.price %>
                                     </div> -->
-                                    <button class="button cart-button best-book-cart-btn">
-                                        <a href="/notes/<%= book.id %>">Read Notes</a>
-                                    </button>
-                                </div>
-                    </div>
-                    <% }) %>
+                                        <button class="button cart-button best-book-cart-btn">
+                                            <a href="/notes/<%= book.id %>">Read Notes</a>
+                                        </button>
+                                    </div>
+                        </div>
+                        <% }) %>
+                </div>
+                <div class="angle next">&#10095;</div>
             </div>
-            <div class="angle next">&#10095;</div>
-        </div>
-    </section>
-    <!-- best book section ends here -->
+        </section>
+        <!-- best book section ends here -->
 
 
-    <!-- testimonial section starts here -->
-    <!--
-    <div class="testimonial-bg">
-        <h1 class="title">Testimonial</h1>
-        <div class="testimonial-card-carousel">
-            <div class="carousel-cards">
-                <div class="testimonial-card" id="testimonial-left">
-                    <div class="testimonial-content">
-                        <p class="quote">This is a testimonial! Amazing work delivered by the team.</p>
-                        <hr class="testimonial-hr">
-                        <h3 class="name">John walker</h3>
-                        <p class="location">New York</p>
-                    </div>
-                </div>
-                <div class="testimonial-card" id="testimonial-center">
-                    <div class="testimonial-content">
-                        <p class="quote">Another Testimonial. Have best time worked with her.</p>
-                        <hr class="testimonial-hr">
-                        <h3 class="name">Jane Smith</h3>
-                        <p class="location">Los Angeles</p>
-                    </div>
-                </div>
-                <div class="testimonial-card" id="testimonial-right">
-                    <div class="testimonial-content">
-                        <p class="quote">Yet, Another testimonial</p>
-                        <hr class="testimonial-hr">
-                        <h3 class="name">Alice Johnson</h3>
-                        <p class="location">Chicago</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    -->
+        <!-- contact us section starts here -->
+
+        <%- include('partials/form', { border: border, contact_title: contact_title }) %>
 
 
-    <!-- testimonial section ends here -->
+            <!-- contact us section ends here -->
 
 
+            <!-- footer section starts here -->
 
-    <!-- contact us section starts here -->
+            <%- include('partials/footer') %>
 
-    <%- include('partials/form', { border: border, contact_title: contact_title }) %>
-
-
-        <!-- contact us section ends here -->
+                <!-- footer section ends here -->
 
 
-        <!-- footer section starts here -->
+                <script src="/js/index.js"></script>
 
-        <%- include('partials/footer') %>
-
-            <!-- footer section ends here -->
-
-
-            <script src="/js/index.js"></script>
 
 </body>
 

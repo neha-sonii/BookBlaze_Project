@@ -144,10 +144,7 @@ app.get("/", async (req, res) => {
         res.render("index", {
             books: BookFromDB,
             contact_title: 'Have a story to share ? We are listening',
-            bgColor: 'none',
-            textColor: '#cab2a0d7',
             border: 'none',
-            menuBorder: '#1b3c53ff'
         });
 
     } catch (error) {
@@ -159,7 +156,7 @@ app.get("/", async (req, res) => {
 
 // about page
 app.get("/about", (req, res) => {
-    res.render("About", { bgColor: '#e1d3c9d7', textColor: '#1b3c53ff', menuBorder: '#1b3c53ff' });
+    res.render("About");
 });
 
 // Contact page
@@ -167,9 +164,6 @@ app.get("/contact", (req, res) => {
     res.render("contact", {
         contact_title: "Let's connect",
         border: "3px solid #7EC8E3",
-        bgColor: '#e1d3c9d7',
-        textColor: '#1b3c53ff',
-        menuBorder: '#1b3c53ff'
     });
 });
 
@@ -183,9 +177,6 @@ app.get("/bookstore", async (req, res) => {
         const BookFromDB = result.rows;
         res.render("shop", {
             books: BookFromDB,
-            bgColor: '#e1d3c9d7',
-            textColor: '#1b3c53ff',
-            menuBorder: '#1b3c53ff',
             title: "Explore",
         });
     } catch (error) {
@@ -303,36 +294,12 @@ app.get("/notes/:id", async (req, res) => {
         res.render("readnotes", {
             book: [book],
             title: "Read Notes",
-            bgColor: '#e1d3c9d7',
-            textColor: '#1b3c53ff',
-            menuBorder: '#1b3c53ff'
         });
     } catch (error) {
         console.log(error);
         res.status(500).send('Error loading page');
     }
 });
-//                 const notes = await generateNotes(book.title, book.author);
-//                 book.notes = notes;
-//                 console.log("Generated notes:", notes);
-//             } catch (error) {
-//                 return res.status(500).send("Error generating notes");
-//             }
-//         }
-//         res.render("readnotes", {
-//             book: [book], // not books: [book]
-//             title: "Read Notes",
-//             bgColor: '#e1d3c9d7',
-//             textColor: '#1b3c53ff',
-//             menuBorder: '#1b3c53ff'
-//         });
-//     } catch (error) {
-//         console.log(error);
-//         res.status(500).send('Error loading page');
-//     }
-// });
-
-
 
 
 // Route for login page

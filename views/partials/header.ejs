@@ -1,20 +1,19 @@
-<div class="container" style="background-color: <%= bgColor %>; color: <%= textColor %> !important;">
+<div class="container">
     <!-- <div class="AnimateHeader"> -->
-    <a class="logo AnimateHeader" href="/" style="color: <%= textColor %> !important;">
-        BookBlaze
+    <a class="" href="/">
+        <img class="logo" src="/images/logo 1.png" alt="">
     </a>
     <!-- </div> -->
 
     <nav>
         <!-- hamburger menu button -->
-        <button class="toggleMenu" style="border: 2px solid <%= menuBorder %>; color: <%= textColor %> !important;"
-            onclick="toggleMenu()">&#9776;</button>
+        <button class="toggleMenu" onclick="toggleMenu()">&#9776;</button>
         <ul id="navLinks" class="AnimateHeader">
-            <li class=""><a class="navtext" href="/" style="color: <%= textColor %> !important">Home</a></li>
-            <li class=""><a class="navtext" href="/about" style="color: <%= textColor %> !important">About</a></li>
-            <li class=""><a class="navtext" href="/bookstore" style="color: <%= textColor %> !important">BookStore</a>
+            <li class=""><a class="navtext" href="/">Home</a></li>
+            <li class=""><a class="navtext" href="/about">About</a></li>
+            <li class=""><a class="navtext" href="/bookstore">BookStore</a>
             </li>
-            <li class=""><a class="navtext" href="/contact" style="color: <%= textColor %> !important">Contact</a></li>
+            <li class=""><a class="navtext" href="/contact">Contact</a></li>
             <% if (user) { %>
                 <!-- Profile dropdown on hover -->
                 <div class="profile-dropdown">
@@ -31,7 +30,7 @@
                     </div>
                 </div>
                 <% } else { %>
-                    <button class="button"><a href="/login">Sign in</a></button>
+                    <button class="button signin-btn"><a href="/login">Sign in</a></button>
                     <% } %>
         </ul>
     </nav>
@@ -67,5 +66,22 @@
                 link.classList.add('active');
             }
         });
+    });
+    // Hide navbar on scroll down, show on scroll up
+    let lastScrollY = window.scrollY;
+    const navbar = document.querySelector(".container");
+
+    window.addEventListener("scroll", () => {
+        const currentScrollY = window.scrollY;
+
+        if (currentScrollY > lastScrollY && currentScrollY > 80) {
+            // scrolling down
+            navbar.classList.add("hide");
+        } else {
+            // scrolling up (even a little)
+            navbar.classList.remove("hide");
+        }
+
+        lastScrollY = currentScrollY;
     });
 </script>
