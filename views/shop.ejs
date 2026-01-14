@@ -49,12 +49,9 @@
                                         placeholder="Author" required autofocus>
                                     <input class="form-input" type="text" name="genre" id="genreInput"
                                         placeholder="Genre" required autofocus>
-                                    <input class="form-input" type="number" name="price" id="priceInput"
-                                        placeholder="Price" required autofocus>
                                     <input class="form-input" type="text" name="isbn" id="isbnInput" placeholder="ISBN"
                                         required autofocus>
-                                    <input class="form-input" type="number" name="rating" id="ratingInput"
-                                        placeholder="Rating (1-10)" required autofocus>
+                                    
                                     <textarea class="form-input" name="description" id="descriptionInput"
                                         placeholder="Description" required autofocus></textarea>
                                     <button type="submit" class="button" id="submitBtn">Submit</button>
@@ -165,6 +162,7 @@
                                                 <option value="relevance">All</option>
                                                 <option value="price_low_to_high">Price: Low to High</option>
                                                 <option value="price_high_to_low">Price: High to Low</option>
+                                                <option value="price_high_to_low">Newest</option>
                                             </select>
                                         </div>
                                         <% books.forEach(book=> { %>
@@ -190,9 +188,6 @@
                                                             <b>Genre</b> - <%= book.genre %>
                                                         </div>
 
-                                                        <div>⭐ <span>
-                                                                <%= book.rating %>/10
-                                                            </span></div>
                                                     </div>
                                                     <div class="shop-buttons">
                                                         <button class="button"><a href="/notes/<%= book.id %>">Read
@@ -230,175 +225,191 @@
 
                                 <!-- footer section ends here -->
 
-                                <script>
-                                    // generate popup box
+        <script>
+            // generate popup box
 
 
-                                    const modal = document.getElementById("addBookModal");
-                                    const openBtn = document.getElementById("openModalBtn");
-                                    const closeBtn = document.getElementById("closeModalBtn");
-                                    const bookForm = document.getElementById("bookForm");
-                                    const modalTitle = document.getElementById("modalTitle");
-                                    const submitBtn = document.getElementById("submitBtn");
+            const modal = document.getElementById("addBookModal");
+            const openBtn = document.getElementById("openModalBtn");
+            const closeBtn = document.getElementById("closeModalBtn");
+            const bookForm = document.getElementById("bookForm");
+            const modalTitle = document.getElementById("modalTitle");
+            const submitBtn = document.getElementById("submitBtn");
 
-                                    // Open modal for adding
-                                    if (openBtn) {
-                                        openBtn.onclick = () => {
-                                            modalTitle.textContent = "Add a New Book";
-                                            bookForm.action = "/add-book";
-                                            bookForm.method = "POST";
-                                            submitBtn.textContent = "Submit";
-                                            // Clear all fields
-                                            bookForm.reset();
-                                            document.getElementById("bookId").value = "";
-                                            modal.style.display = "block";
-                                        };
-                                    }
+            // Open modal for adding
+            if (openBtn) {
+                openBtn.onclick = () => {
+                    modalTitle.textContent = "Add a New Book";
+                    bookForm.action = "/add-book";
+                    bookForm.method = "POST";
+                    submitBtn.textContent = "Submit";
+                    // Clear all fields
+                    bookForm.reset();
+                    document.getElementById("bookId").value = "";
+                    modal.style.display = "block";
+                };
+            }
 
-                                    // Open modal for editing
-                                    document.querySelectorAll(".edit").forEach(btn => {
-                                        btn.onclick = function () {
-                                            // Get the book ID from the button's data attribute
-                                            const bookId = this.getAttribute("data-id");
-                                            fetch(`/edit-book/${bookId}`)
-                                                // Fetch the book details
-                                                .then(res => res.json())
-                                                .then(book => {
-                                                    modalTitle.textContent = "Edit Book";
-                                                    bookForm.action = `/edit-book/${bookId}`;
-                                                    bookForm.method = "POST";
-                                                    submitBtn.textContent = "Update";
-                                                    document.getElementById("bookId").value = book.id;
-                                                    document.getElementById("titleInput").value = book.title;
-                                                    document.getElementById("authorInput").value = book.author;
-                                                    document.getElementById("genreInput").value = book.genre;
-                                                    document.getElementById("priceInput").value = book.price;
-                                                    document.getElementById("isbnInput").value = book.isbn;
-                                                    document.getElementById("ratingInput").value = book.rating;
-                                                    document.getElementById("descriptionInput").value = book.description;
-                                                    modal.style.display = "block";
-                                                });
-                                        };
-                                    });
+            // Open modal for editing
+            document.querySelectorAll(".edit").forEach(btn => {
+                btn.onclick = function () {
+                    // Get the book ID from the button's data attribute
+                    const bookId = this.getAttribute("data-id");
+                    fetch(`/edit-book/${bookId}`)
+                        // Fetch the book details
+                        .then(res => res.json())
+                        .then(book => {
+                            modalTitle.textContent = "Edit Book";
+                            bookForm.action = `/edit-book/${bookId}`;
+                            bookForm.method = "POST";
+                            submitBtn.textContent = "Update";
+                            document.getElementById("bookId").value = book.id;
+                            document.getElementById("titleInput").value = book.title;
+                            document.getElementById("authorInput").value = book.author;
+                            document.getElementById("genreInput").value = book.genre;
+                            document.getElementById("priceInput").value = book.price;
+                            document.getElementById("isbnInput").value = book.isbn;
+                            document.getElementById("ratingInput").value = book.rating;
+                            document.getElementById("descriptionInput").value = book.description;
+                            modal.style.display = "block";
+                        });
+                };
+            });
 
-                                    closeBtn.onclick = () => modal.style.display = "none";
+            closeBtn.onclick = () => modal.style.display = "none";
 
-                                    // to show flash messages and disappear after 3sec.
-                                    setTimeout(() => {
-                                        const alert = document.querySelector(".alert");
-                                        if (alert) {
-                                            alert.style.display = "none";
-                                        }
+            // to show flash messages and disappear after 3sec.
+            setTimeout(() => {
+                const alert = document.querySelector(".alert");
+                if (alert) {
+                    alert.style.display = "none";
+                }
 
-                                    }, 3000);
-
-
-                                    // to sort according to the sort list
-                                    document.getElementById('sort').addEventListener('change', function () {
-                                        const sortValue = this.value;
-                                        const container = document.querySelector('.shop-cards');
-                                        const cards = Array.from(container.querySelectorAll('.book-card'));
-
-                                        let sortedCards;
-
-                                        if (sortValue === 'relevance') {
-                                            sortedCards = cards.sort((a, b) => {
-                                                const aTitle = a.querySelector('.book-title').textContent.toLowerCase();
-                                                const bTitle = b.querySelector('.book-title').textContent.toLowerCase();
-                                                return aTitle.localeCompare(bTitle);
-                                            });
-                                        } else if (sortValue === 'price_low_to_high') {
-                                            sortedCards = cards.sort((a, b) =>
-                                                parseFloat(a.dataset.price) - parseFloat(b.dataset.price)
-                                            );
-                                        } else if (sortValue === 'price_high_to_low') {
-                                            sortedCards = cards.sort((a, b) => parseFloat(b.dataset.price) - parseFloat(a.dataset.price));
-                                        } else {
-                                            // Default to original order
-                                            sortedCards = cards;
-                                        }
-                                        // Clear the container and append the sorted cards
-                                        cards.forEach(cards => container.removeChild(cards));
-                                        sortedCards.forEach(card => container.appendChild(card));
-                                    });
+            }, 3000);
 
 
+            // to sort according to the sort list
+            document.getElementById('sort').addEventListener('change', function () {
+                const sortValue = this.value;
+                const container = document.querySelector('.shop-cards');
+                const cards = Array.from(container.querySelectorAll('.book-card'));
 
-                                    // Filter books by genre/category
-                                    const categoryCheckboxes = document.querySelectorAll('.categories input[type="checkbox"]');
-                                    categoryCheckboxes.forEach(checkbox => {
-                                        checkbox.addEventListener('change', function () {
-                                            const checked = Array.from(categoryCheckboxes).filter(cb => cb.checked);
-                                            const selectedGenres = checked.map(cb => cb.nextElementSibling.textContent.trim().replace(/'/g, '').replace(/ /g, '_').toLowerCase());
-                                            const cards = document.querySelectorAll('.book-card');
-                                            if (selectedGenres.length === 0) {
-                                                cards.forEach(card => card.style.display = '');
-                                            } else {
-                                                cards.forEach(card => {
-                                                    const genre = card.getAttribute('data-genre');
-                                                    if (selectedGenres.includes(genre)) {
-                                                        card.style.display = '';
-                                                    } else {
-                                                        card.style.display = 'none';
-                                                    }
-                                                });
-                                            }
-                                        });
-                                    });
+                let sortedCards;
 
-                                    // Horizontal scroll for categories on small screens
-                                    const categories = document.querySelector(".categories");
-                                    const prevBtn = document.querySelector(".previous.category-arrow");
-                                    const nextBtn = document.querySelector(".next.category-arrow");
-                                    function scrollCategories(amount) {
-                                        categories.scrollBy({ left: amount, behavior: 'smooth' });
-                                    }
-                                    if (window.innerWidth <= 750) {
-                                        if (prevBtn) prevBtn.onclick = () => scrollCategories(-200);
-                                        if (nextBtn) nextBtn.onclick = () => scrollCategories(200);
-                                    }
-
-
-                                    // search book by their title
-                                    document.getElementById("searchInput").addEventListener("input", function () {
-                                        const searchTerm = this.value.toLowerCase();
-                                        const cards = document.querySelectorAll(".book-card");
-                                        cards.forEach(card => {
-                                            const title = card.querySelector(".book-title1").textContent.toLowerCase();
-                                            if (title.includes(searchTerm)) {
-                                                card.style.display = "";
-                                            } else {
-                                                card.style.display = "none";
-                                            }
-                                        });
-                                    });
+                if (sortValue === 'relevance') {
+                    sortedCards = cards.sort((a, b) => {
+                        const aTitle = a.querySelector('.book-title').textContent.toLowerCase();
+                        const bTitle = b.querySelector('.book-title').textContent.toLowerCase();
+                        return aTitle.localeCompare(bTitle);
+                    });
+                } else if (sortValue === 'price_low_to_high') {
+                    sortedCards = cards.sort((a, b) =>
+                        parseFloat(a.dataset.price) - parseFloat(b.dataset.price)
+                    );
+                } else if (sortValue === 'price_high_to_low') {
+                    sortedCards = cards.sort((a, b) => parseFloat(b.dataset.price) - parseFloat(a.dataset.price));
+                } else if (sortValue === 'newest') {
+                    // Sort by newest: assume higher book.id means newer
+                    sortedCards = cards.sort((a, b) => {
+                        // Try to get book id from data-id attribute or from the edit button
+                        const getId = (card) => {
+                            // Try data-id on card
+                            let id = card.getAttribute('data-id');
+                            if (!id) {
+                                // Try to find edit button with data-id
+                                const editBtn = card.querySelector('.edit[data-id]');
+                                if (editBtn) id = editBtn.getAttribute('data-id');
+                            }
+                            return id ? parseInt(id, 10) : 0;
+                        };
+                        return getId(b) - getId(a);
+                    });
+                } else {
+                    // Default to original order
+                    sortedCards = cards;
+                }
+                // Clear the container and append the sorted cards
+                cards.forEach(card => container.removeChild(card));
+                sortedCards.forEach(card => container.appendChild(card));
+            });
 
 
-                                    // Animate book cards on scroll using Intersection Observer
-                                    (function () {
-                                        const cards = document.querySelectorAll('.card-animate');
-                                        function showCard(entry, observer) {
-                                            if (entry.isIntersecting) {
-                                                entry.target.classList.add('in-view');
-                                                observer.unobserve(entry.target);
-                                            }
-                                        }
-                                        if ('IntersectionObserver' in window) {
-                                            const observer = new IntersectionObserver((entries, observer) => {
-                                                entries.forEach(entry => {
-                                                    showCard(entry, observer);
-                                                });
-                                            }, { threshold: 0.15 });
-                                            cards.forEach(card => {
-                                                card.classList.remove('in-view'); // Ensure hidden initially
-                                                observer.observe(card);
-                                            });
-                                        } else {
-                                            // Fallback: show all cards if IntersectionObserver not supported
-                                            cards.forEach(card => card.classList.add('in-view'));
-                                        }
-                                    })();
-                                </script>
+
+            // Filter books by genre/category
+            const categoryCheckboxes = document.querySelectorAll('.categories input[type="checkbox"]');
+            categoryCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function () {
+                    const checked = Array.from(categoryCheckboxes).filter(cb => cb.checked);
+                    const selectedGenres = checked.map(cb => cb.nextElementSibling.textContent.trim().replace(/'/g, '').replace(/ /g, '_').toLowerCase());
+                    const cards = document.querySelectorAll('.book-card');
+                    if (selectedGenres.length === 0) {
+                        cards.forEach(card => card.style.display = '');
+                    } else {
+                        cards.forEach(card => {
+                            const genre = card.getAttribute('data-genre');
+                            if (selectedGenres.includes(genre)) {
+                                card.style.display = '';
+                            } else {
+                                card.style.display = 'none';
+                            }
+                        });
+                    }
+                });
+            });
+
+            // Horizontal scroll for categories on small screens
+            const categories = document.querySelector(".categories");
+            const prevBtn = document.querySelector(".previous.category-arrow");
+            const nextBtn = document.querySelector(".next.category-arrow");
+            function scrollCategories(amount) {
+                categories.scrollBy({ left: amount, behavior: 'smooth' });
+            }
+            if (window.innerWidth <= 750) {
+                if (prevBtn) prevBtn.onclick = () => scrollCategories(-200);
+                if (nextBtn) nextBtn.onclick = () => scrollCategories(200);
+            }
+
+
+            // search book by their title
+            document.getElementById("searchInput").addEventListener("input", function () {
+                const searchTerm = this.value.toLowerCase();
+                const cards = document.querySelectorAll(".book-card");
+                cards.forEach(card => {
+                    const title = card.querySelector(".book-title1").textContent.toLowerCase();
+                    if (title.includes(searchTerm)) {
+                        card.style.display = "";
+                    } else {
+                        card.style.display = "none";
+                    }
+                });
+            });
+
+
+            // Animate book cards on scroll using Intersection Observer
+            (function () {
+                const cards = document.querySelectorAll('.card-animate');
+                function showCard(entry, observer) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('in-view');
+                        observer.unobserve(entry.target);
+                    }
+                }
+                if ('IntersectionObserver' in window) {
+                    const observer = new IntersectionObserver((entries, observer) => {
+                        entries.forEach(entry => {
+                            showCard(entry, observer);
+                        });
+                    }, { threshold: 0.15 });
+                    cards.forEach(card => {
+                        card.classList.remove('in-view'); // Ensure hidden initially
+                        observer.observe(card);
+                    });
+                } else {
+                    // Fallback: show all cards if IntersectionObserver not supported
+                    cards.forEach(card => card.classList.add('in-view'));
+                }
+            })();
+        </script>
 </body>
 
 </html>
